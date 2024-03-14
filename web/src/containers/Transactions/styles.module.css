@@ -1,0 +1,30 @@
+.margin-right {
+  margin-right: 1rem;
+}
+
+.transaction-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.center {
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.flex {
+  flex: 1;
+}
+
+.flex-container {
+  display: flex;
+  gap: 1rem;
+}
+
+.scroll {
+  margin-top: 3rem;
+  overflow-y: scroll;
+}
