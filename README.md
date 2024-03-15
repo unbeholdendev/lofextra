@@ -44,7 +44,7 @@ Extracting the underlying stuff that can be used for building other types of app
 
 The web version is not using any ORM because there just aren't any good that work in the browser environment flawlessly. I've implemented a few functions that help interacting with the database, but there isn't a very good type-safety, especially for queries, yet.
 
-Hopefully, something like [Prisma]() is going to be supported in the browser soon.
+Hopefully, something like [Prisma](https://www.prisma.io/) is going to be supported in the browser soon.
 
 ## Contributions
 
