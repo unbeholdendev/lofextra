@@ -3,7 +3,7 @@ import "./pico.pumpkin.min.css";
 import styles from "./styles.module.css";
 
 export const metadata: Metadata = {
-  title: "expense tracker",
+  title: "lofextra",
   description: "local-first expense tracker",
 };
 

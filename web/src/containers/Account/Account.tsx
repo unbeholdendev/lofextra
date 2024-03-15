@@ -1,5 +1,6 @@
 import { Form } from "@/components/Form";
 import { Input } from "@/components/Input";
+import { CopyIcon } from "@/components/icons/Copy";
 import { useAccountContext, useMutation } from "@/hooks";
 import {
   generateNewAccountKeyPair,
@@ -65,7 +66,11 @@ export const Account = () => {
       <p>your mnemonic:</p>
 
       <p>
-        <strong>{currentMnemonic}</strong>
+        <strong>{currentMnemonic}</strong>{" "}
+        <CopyIcon
+          className={styles.copy}
+          onClick={() => navigator.clipboard.writeText(currentMnemonic)}
+        />
       </p>
 
       <fieldset role="group">

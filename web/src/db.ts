@@ -50,11 +50,11 @@ const createTables = async (
   promiser: (..._args: unknown[]) => Promise<unknown>
 ) => {
   // for (const table of tables) {
-  //   await promiser("exec", {
-  //     sql: `
-  //            drop table ${table}
+  // await promiser("exec", {
+  //   sql: `
+  //            drop table pendingUpdates
   //         `,
-  //   });
+  // });
   // }
 
   await promiser("exec", {
@@ -89,6 +89,7 @@ const createTables = async (
           CREATE TABLE IF NOT EXISTS pendingUpdates (
               id INTEGER PRIMARY KEY AUTOINCREMENT,
               message TEXT NOT NULL,
+              updatedAt INTEGER NOT NULL,
               createdAt INTEGER NOT NULL
           );
       `,

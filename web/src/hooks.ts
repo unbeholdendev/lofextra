@@ -206,6 +206,7 @@ const useServerSync = () => {
               tableName: "pendingUpdates",
               columnDataMap: {
                 message: JSON.stringify(message),
+                createdAt: Date.now(),
               },
             },
             hlc

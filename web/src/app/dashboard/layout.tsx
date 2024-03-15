@@ -21,7 +21,7 @@ export default function Layout({
         <nav>
           <ul>
             <li>
-              <h1>expense tracker (beta)</h1>
+              <h1>lofextra (beta)</h1>
             </li>
           </ul>
 
@@ -47,7 +47,7 @@ export default function Layout({
         </QueryCacheProvider>
       </DatabaseProvider>
 
-      <footer>dashboard layout footer</footer>
+      <footer>ea7a</footer>
     </>
   );
 }
