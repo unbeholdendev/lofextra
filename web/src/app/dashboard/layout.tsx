@@ -21,7 +21,7 @@ export default function Layout({
         <nav>
           <ul>
             <li>
-              <h1>expense tracker</h1>
+              <h1>expense tracker (beta)</h1>
             </li>
           </ul>
 

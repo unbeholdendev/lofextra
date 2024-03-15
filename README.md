@@ -14,18 +14,41 @@ Other important aspect is offline support. The app works online seamlessly, the 
 
 ## Features
 
-The current version of the app is mostly proof of concept. It offers mnemonics, data encryption/decryption, synchronization, offline support. As for the expense tracking part, the most core features that I'm used to using are supported. Users can add transactions, edit and delete them, attach one of the predefined categories, see their total spending in the last 30 days.
+The current version of the app is mostly proof of concept. It offers mnemonics, data encryption/decryption, synchronization, offline support. As for the expense tracking part, the most core features that I'm used to using are supported. Users can add transactions, edit and delete them, attach one of the predefined categories, see their total spending over the last 30 days.
 
 ## Plans
 
-- react native coming
-- recurring, budgeting
-- currency
-- creating npm lib to build app upon
+Upcoming plans & features.
+
+### React native version
+
+Even though the app can be used on the web, it's more likely a mobile app by nature. I've chosen web as the first platform because I'm more familiar with it. React native version is the highest priority currently.
+
+### Multiple currencies
+
+You're on vacation and pay in a different currency? This is the basic use case that should be supported. The plan is to pull the exchange rate from some open API when adding/editing transaction with a non-default currency and display the expense amount in both currencies.
+
+### Recurring transactions
+
+Saves you time so that you don't have to input transactions that happen on regular basis.
+
+### Budgeting
+
+I never really needed it, but if there's a demand..
+
+### NPM package
+
+Extracting the underlying stuff that can be used for building other types of apps into NPM package. Stuff like mnemonic, sync logic, encryption/decryption.
 
 ## ORM
 
+The web version is not using any ORM because there just aren't any good that work in the browser environment flawlessly. I've implemented a few functions that help interacting with the database, but there isn't a very good type-safety, especially for queries, yet.
+
+Hopefully, something like [Prisma]() is going to be supported in the browser soon.
+
 ## Contributions
+
+I'm doing this in my free time to solve my own need and also spread privacy-focused thinking when building apps. I'm very open to any ideas, feedback and help with improvements and new features.
 
 ## Alternative solutions for building local-first apps
 
