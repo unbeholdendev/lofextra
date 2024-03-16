@@ -12,7 +12,7 @@ export const Overview = ({ total, setModalTransaction }: Props) => {
   return (
     <div className={styles.overview}>
       <div>
-        <div>Last 30 days spent:</div>
+        <div>last 30 days spent</div>
         <div>
           <strong>{total || 0}</strong>
         </div>

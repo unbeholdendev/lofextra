@@ -1,4 +1,5 @@
-import { useAccountContext, useQuery } from "@/hooks";
+import { useAccountContext } from "@/hooks/contexts";
+import { useQuery } from "@/hooks/useQuery";
 import { getTimestampAfterSubtractingDays } from "@/utils/dates";
 import { transactionsSchema } from "@/validators/validators";
 import { useMemo, useState } from "react";

@@ -1,4 +1,4 @@
-import { useQuery } from "@/hooks";
+import { useQuery } from "@/hooks/useQuery";
 import { getDateFromTimestamp } from "@/utils/dates";
 import { Transaction as TransactionType } from "@/validators/types";
 import { categoriesSchema } from "@/validators/validators";

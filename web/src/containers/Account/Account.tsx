@@ -1,7 +1,8 @@
 import { Form } from "@/components/Form";
 import { Input } from "@/components/Input";
 import { CopyIcon } from "@/components/icons/Copy";
-import { useAccountContext, useMutation } from "@/hooks";
+import { useAccountContext } from "@/hooks/contexts";
+import { useMutation } from "@/hooks/useMutation";
 import {
   generateNewAccountKeyPair,
   getAccountKeyPairFromMnemonic,

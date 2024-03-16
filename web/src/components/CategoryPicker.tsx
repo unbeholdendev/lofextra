@@ -1,4 +1,4 @@
-import { useQuery } from "@/hooks";
+import { useQuery } from "@/hooks/useQuery";
 import { categoriesSchema } from "@/validators/validators";
 import { useFormContext } from "react-hook-form";
 

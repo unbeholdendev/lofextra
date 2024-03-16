@@ -1,4 +1,4 @@
-import { useQuery } from "@/hooks";
+import { useQuery } from "@/hooks/useQuery";
 import { accountsSchema, devicesSchema } from "@/validators/validators";
 import { bytesToHex } from "@noble/hashes/utils";
 import { ReactNode, createContext, useMemo } from "react";
