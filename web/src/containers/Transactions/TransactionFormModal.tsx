@@ -13,6 +13,8 @@ import {
   DatabaseMutationOperation,
   Transaction as TransactionType,
 } from "@/validators/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { TypeOf, z } from "zod";
 import styles from "./styles.module.css";
 
 export type ModalTransaction = Omit<
@@ -26,12 +28,14 @@ type Props = {
   onClose: () => void;
 };
 
-type FormValues = {
-  title: string;
-  amount: number | null;
-  categoryId: string | null;
-  createdAt: string;
-};
+const schema = z.object({
+  title: z.string().min(1),
+  amount: z.number(),
+  categoryId: z.string().nullable(),
+  createdAt: z.string(),
+});
+
+type FormValues = TypeOf<typeof schema>;
 
 export const TransactionFormModal = ({
   transaction,
@@ -77,13 +81,14 @@ export const TransactionFormModal = ({
     <Modal onClose={onClose} header={<strong>add expense</strong>}>
       <Form<FormValues>
         onSubmit={onSubmit}
+        resolver={zodResolver(schema)}
         values={{
           categoryId: transaction.categoryId,
           createdAt: formatDateForInput(
             getDateFromTimestamp(transaction.createdAt)
           ),
           title: transaction.title,
-          amount: transaction.amount,
+          amount: transaction.amount ?? NaN,
         }}
       >
         <fieldset>

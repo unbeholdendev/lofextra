@@ -4,9 +4,29 @@
 
 .transaction-row {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
+.transaction-row:hover {
+  background: var(--pico-text-selection-color);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.margin-bottom {
+  margin-bottom: 0.2rem;
+}
+
+.small {
+  font-size: 0.7rem;
+}
+
+.large {
+  font-size: 1.5rem;
 }
 
 .flex {

@@ -18,20 +18,31 @@ export const Transaction = ({ transaction, onDetailClick }: Props) => {
   );
 
   return (
-    <div className={styles["transaction-row"]}>
-      <span className={styles.flex}>
-        {getDateFromTimestamp(transaction.createdAt).toLocaleString()}
-      </span>
+    <div
+      className={styles["transaction-row"]}
+      onClick={() => onDetailClick(transaction)}
+    >
+      <div>
+        <p className={styles["margin-bottom"]}>
+          <strong>{transaction.title}</strong>
+        </p>
 
-      <span className={styles.flex}>
-        {`${transaction.title} ${category ? `(${category.title})` : ""}`}
-      </span>
+        {category && (
+          <p className={`${styles["margin-bottom"]} ${styles.small}`}>
+            {category.title}
+          </p>
+        )}
+      </div>
 
-      <span className={styles.flex}>{transaction.amount}</span>
+      <div>
+        <p className={styles["margin-bottom"]}>
+          <strong>{transaction.amount}</strong>
+        </p>
 
-      <button className="outline" onClick={() => onDetailClick(transaction)}>
-        detail
-      </button>
+        <p className={`${styles["margin-bottom"]} ${styles.small}`}>
+          {getDateFromTimestamp(transaction.createdAt).toLocaleDateString()}
+        </p>
+      </div>
     </div>
   );
 };

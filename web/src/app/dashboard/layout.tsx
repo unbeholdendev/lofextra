@@ -25,15 +25,17 @@ export default function Layout({
             </li>
           </ul>
 
-          <ul>
-            <li>
-              {pathname.includes("account") ? (
-                <Link href="/dashboard">dashboard</Link>
-              ) : (
-                <Link href="/dashboard/account">account</Link>
-              )}
-            </li>
-          </ul>
+          {pathname.includes("dashboard") && (
+            <ul>
+              <li>
+                {pathname.includes("account") ? (
+                  <Link href="/dashboard">dashboard</Link>
+                ) : (
+                  <Link href="/dashboard/account">account</Link>
+                )}
+              </li>
+            </ul>
+          )}
         </nav>
       </header>
 
@@ -46,8 +48,6 @@ export default function Layout({
           </AccountProvider>
         </QueryCacheProvider>
       </DatabaseProvider>
-
-      <footer>ea7a</footer>
     </>
   );
 }

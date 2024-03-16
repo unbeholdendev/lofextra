@@ -75,7 +75,12 @@ export const Account = () => {
       </p>
 
       <fieldset role="group">
-        <Input name="mnemonic" aria-label="mnemonic" className={styles.flex} />
+        <Input
+          name="mnemonic"
+          aria-label="mnemonic"
+          placeholder="mnemonic"
+          className={styles.flex}
+        />
       </fieldset>
 
       <div className={styles["flex-container"]}>
