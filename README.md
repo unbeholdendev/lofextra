@@ -4,7 +4,7 @@
 
 [lofextra](https://lofextra.com)
 
-https://github.com/pycan-jouza/lofextra/assets/141557160/f277ca4e-aa81-46b8-b512-5a41b61a4c45
+https://github.com/pycan-jouza/lofextra/assets/141557160/cbee233a-5f01-43ae-b325-b54cad624569
 
 ### Motivation
 
