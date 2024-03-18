@@ -4,6 +4,8 @@
 
 [lofextra](https://lofextra.com)
 
+![lofextra_demo](https://github.com/pycan-jouza/lofextra/blob/main/lofextra_demo.gif)
+
 ### Motivation
 
 I've been looking for a solution to track my family's expenses. Being a privacy aware individual, I've naturally discarded all the commercial solutions. True, there are a few self-hosted options that I've tried like [Actual](https://actualbudget.org/) or [Firefly III](https://www.firefly-iii.org/), but I found both of them unnecessarily complex and without support for multiple accounts (me and my wife). Luckily, I've got a skillset that allows me to build a solution myself. The solution that will leverage human right for (sensitive!) data ownership.
