@@ -2,10 +2,7 @@
 
 ## LOcal-First EXpense TRAcker
 
-todo:
-
-- links
-- video gif showcase
+[lofextra](https://lofextra.com)
 
 ### Motivation
 

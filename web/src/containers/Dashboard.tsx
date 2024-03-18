@@ -32,6 +32,8 @@ export const Dashboard = () => {
 
   const total = useMemo(() => totalData?.[0].total ?? NaN, [totalData]);
 
+  console.log(transactions);
+
   return (
     <>
       <Overview total={total} setModalTransaction={setModalTransaction} />

@@ -8,6 +8,18 @@ export const formatDateForInput = (date: Date) => {
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 };
 
+export const appendSecondsAndMilis = (
+  originalTs: number,
+  dateString: string
+) => {
+  const originalDate = new Date(originalTs);
+
+  const seconds = String(originalDate.getSeconds()).padStart(2, "0");
+  const milliseconds = String(originalDate.getMilliseconds()).padStart(3, "0");
+
+  return `${dateString}:${seconds}.${milliseconds}`;
+};
+
 export const getUnixTimestamp = (date?: Date) =>
   Math.floor(date?.getTime() ?? Date.now());
 

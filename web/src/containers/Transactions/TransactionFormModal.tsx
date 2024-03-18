@@ -5,6 +5,7 @@ import { Modal } from "@/components/Modal";
 import { useAccountContext } from "@/hooks/contexts";
 import { useMutation } from "@/hooks/useMutation";
 import {
+  appendSecondsAndMilis,
   formatDateForInput,
   getDateFromTimestamp,
   getUnixTimestamp,
@@ -66,7 +67,9 @@ export const TransactionFormModal = ({
         pubKeyHex: pubKeyHex,
         categoryId: categoryId || null,
         deletedAt: null,
-        createdAt: getUnixTimestamp(new Date(createdAt)),
+        createdAt: getUnixTimestamp(
+          new Date(appendSecondsAndMilis(transaction.createdAt, createdAt))
+        ),
       },
     });
 
