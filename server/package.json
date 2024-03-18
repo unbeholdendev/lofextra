@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node src",
-    "dev": "nodemon --exec 'ts-node' src/index.ts"
+    "dev": "nodemon --exec 'ts-node' src/index.ts",
+    "deploy": "./deploy.sh"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +27,7 @@
   },
   "dependencies": {
     "@prisma/client": "5.10.2",
+    "dotenv": "^16.4.5",
     "socket.io": "^4.7.4",
     "zod": "^3.22.4"
   }

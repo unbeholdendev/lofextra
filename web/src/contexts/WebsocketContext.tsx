@@ -49,8 +49,6 @@ export const WebsocketProvider = ({ children }: Props) => {
   useEffect(() => {
     const onMessages = async (messages: unknown, ack: () => void) => {
       for (const message of messagesSchema.parse(messages)) {
-        console.log(`received message ${JSON.stringify(message, null, 2)}`);
-
         const messageHlc = deserialize(message.hlc);
 
         if (messageHlc.deviceId === deviceId) {

@@ -86,8 +86,6 @@ const useServerSync = () => {
         hlc: serialize(hlc),
       };
 
-      console.log(message);
-
       try {
         await socket.timeout(3000).emitWithAck("messages", [message]);
       } catch (err) {

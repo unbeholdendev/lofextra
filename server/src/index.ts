@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { Socket } from 'socket.io'
 import { socketConnectionsMap } from './connections'
 import { registerOnMessagesHandler } from './handlers'
@@ -6,7 +7,7 @@ import { io } from './io'
 import { syncMessages } from './lib'
 import { prisma } from './prisma'
 
-httpServer.listen(8080)
+httpServer.listen(process.env.PORT || 8080)
 
 io.on('connection', async (socket: Socket) => {
   const { pubKeyHex, deviceId } = socket.handshake.auth

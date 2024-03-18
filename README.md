@@ -49,7 +49,7 @@ Extracting the underlying stuff that can be used for building other types of app
 
 The web version is not using any ORM because there just aren't any good that work in the browser environment flawlessly. I've implemented a few functions that help interacting with the database, but there isn't a very good type-safety, especially for queries, yet.
 
-Hopefully, [Prisma](https://www.prisma.io/) is going to support browser databases soon.
+Hopefully, ORM like [Prisma](https://www.prisma.io/) is going to support browser databases soon.
 
 ### Contributions
 
@@ -58,3 +58,7 @@ I'm doing this in my free time to solve my own need and also spread privacy-focu
 ### Alternative solutions for building local-first apps
 
 I've strongly considered using [Evolu](https://www.evolu.dev/) as a tool for building local-first app. Despite the maintainer's effort to offer a straightforward solution comprehensible to all developers, the library's integration of [Effect](https://effect.website/), a tool not widely adopted among developers, doesn't help achieving this goal. Furthermore, I wasn't able to make it run at all, always ran into errors so it eventually became a debugging hell. You shouldn't have to struggle with a library like that.
+
+### Disclaimer
+
+The app is using [Plausible](https://plausible.io/) analytics to collect anonymous data about the page visits. I'd like to have a general idea how many people are using lofextra.

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./pico.pumpkin.min.css";
 import styles from "./styles.module.css";
 
@@ -14,6 +15,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Script
+        defer
+        data-domain="lofextra.com"
+        src="https://plausible.lofextra.com/js/script.js"
+      />
+
       <body className={styles.body}>
         {children}
         <footer className={styles.footer}>
