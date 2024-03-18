@@ -22,10 +22,6 @@ The current version of the app is mostly proof of concept. It offers mnemonics, 
 
 Upcoming plans & features.
 
-#### React native version
-
-Even though the app can be used on the web, it's more likely a mobile app by nature. I've chosen web as the first platform because I'm more familiar with it. React native version is the highest priority currently.
-
 #### Multiple currencies
 
 You're on vacation and pay in a different currency? This is the basic use case that should be supported. The plan is to pull the exchange rate from some open API when adding/editing transaction with a non-default currency and display the expense amount in both currencies.
@@ -33,6 +29,14 @@ You're on vacation and pay in a different currency? This is the basic use case t
 #### Recurring transactions
 
 Saves you time so that you don't have to input transactions that happen on regular basis.
+
+#### Progressive Web App
+
+Ability to make the web version feel like a native app
+
+#### Mobile version
+
+Even though the app can be used on the web, it's more likely a mobile app by nature. I've chosen web as the first platform because I'm more familiar with it.
 
 #### Budgeting
 
