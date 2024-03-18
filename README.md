@@ -4,7 +4,7 @@
 
 [lofextra](https://lofextra.com)
 
-![lofextra_demo](https://github.com/pycan-jouza/lofextra/blob/main/lofextra_demo.gif)
+https://github.com/pycan-jouza/lofextra/assets/141557160/f277ca4e-aa81-46b8-b512-5a41b61a4c45
 
 ### Motivation
 
