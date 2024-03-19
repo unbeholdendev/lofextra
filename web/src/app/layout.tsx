@@ -3,10 +3,38 @@ import Script from "next/script";
 import "./pico.pumpkin.min.css";
 import styles from "./styles.module.css";
 
+const APP_NAME = "lofextra";
+const APP_DESCRIPTION = "local-first expense tracker";
+
 export const metadata: Metadata = {
-  title: "lofextra",
-  description: "local-first expense tracker",
+  applicationName: APP_NAME,
+  title: APP_NAME,
+  description: APP_DESCRIPTION,
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: APP_NAME,
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  openGraph: {
+    type: "website",
+    siteName: APP_NAME,
+    title: APP_NAME,
+    description: APP_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary",
+    title: APP_NAME,
+    description: APP_DESCRIPTION,
+  },
 };
+
+// export const viewport: Viewport = {
+//   themeColor: "#FFFFFF",
+// };
 
 export default function RootLayout({
   children,
