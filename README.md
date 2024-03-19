@@ -1,8 +1,6 @@
-# LOFEXTRA
+# [lofextra](https://lofextra.com)
 
 ## LOcal-First EXpense TRAcker
-
-[lofextra](https://lofextra.com)
 
 https://github.com/pycan-jouza/lofextra/assets/141557160/cbee233a-5f01-43ae-b325-b54cad624569
 
