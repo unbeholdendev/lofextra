@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Script from "next/script";
 import "./pico.pumpkin.min.css";
 import styles from "./styles.module.css";
@@ -8,7 +9,7 @@ const APP_DESCRIPTION = "local-first expense tracker";
 
 export const metadata: Metadata = {
   applicationName: APP_NAME,
-  title: APP_NAME,
+  title: `${APP_NAME} - ${APP_DESCRIPTION}`,
   description: APP_DESCRIPTION,
   manifest: "/manifest.json",
   appleWebApp: {
@@ -52,6 +53,10 @@ export default function RootLayout({
       <body className={styles.body}>
         {children}
         <footer className={styles.footer}>
+          <Link href="/dashboard">app</Link>
+
+          <Link href="/faq">faq</Link>
+
           <a
             href="https://github.com/pycan-jouza/lofextra"
             target="_blank"
