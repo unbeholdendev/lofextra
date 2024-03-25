@@ -15,6 +15,8 @@ export type SelectRow = {
   rowNumber: number;
 };
 
+export const DB_NAME = "mydb.sqlite3";
+
 export const initDatabase = async (
   sqlite3Worker1Promiser: (...args: unknown[]) => unknown
 ) => {
@@ -28,14 +30,35 @@ export const initDatabase = async (
     }
   );
 
-  await promiser("open", {
-    filename: "file:mydb.sqlite3?vfs=opfs",
+  // @ts-ignore
+  const { dbId } = await promiser("open", {
+    filename: `file:${DB_NAME}?vfs=opfs`,
   });
 
   await createTables(promiser);
   await seed(promiser);
 
-  return promiser;
+  const exportDatabase = async () => {
+    // @ts-ignore
+    const { result } = await promiser("export", { dbId });
+
+    const blob = new Blob([result.byteArray], {
+      type: "application/x-sqlite3",
+    });
+    const a = document.createElement("a");
+    document.body.appendChild(a);
+    a.href = window.URL.createObjectURL(blob);
+    a.download = "lofextra.sqlite3";
+    a.addEventListener("click", function () {
+      setTimeout(function () {
+        window.URL.revokeObjectURL(a.href);
+        a.remove();
+      }, 500);
+    });
+    a.click();
+  };
+
+  return { promiser, exportDatabase };
 };
 
 const tables = [

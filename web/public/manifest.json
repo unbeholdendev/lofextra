@@ -328,7 +328,7 @@
       "sizes": "256x256"
     },
     {
-      "src": "android/maskable_icon_x512",
+      "src": "android/maskable_icon_x512.png",
       "sizes": "512x512",
       "purpose": "maskable"
     },

@@ -10,6 +10,7 @@ import {
 
 type DatabaseContext = {
   exec: <T extends Record<string, unknown>>(sql: string) => Promise<T[]>;
+  exportDatabase: () => Promise<unknown>;
 };
 
 export const DatabaseContext = createContext({} as DatabaseContext);
@@ -20,18 +21,23 @@ type Props = {
 
 export const DatabaseProvider = ({ children }: Props) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [{ promiser }, setPromiser] = useState({
+  const [{ promiser, exportDatabase }, setDb] = useState({
     promiser: (..._args: unknown[]) => new Promise(() => {}),
+    exportDatabase: () => new Promise(() => {}),
   });
 
   useEffect(() => {
-    // @ts-ignore
-    import("@sqlite.org/sqlite-wasm").then(({ sqlite3Worker1Promiser }) => {
-      initDatabase(sqlite3Worker1Promiser).then((_promiser) => {
-        setPromiser({ promiser: _promiser });
-        setIsLoading(false);
-      });
-    });
+    import("@sqlite.org/sqlite-wasm").then(
+      // @ts-ignore
+      ({ sqlite3Worker1Promiser }) => {
+        initDatabase(sqlite3Worker1Promiser).then(
+          ({ promiser: _promiser, exportDatabase }) => {
+            setDb({ promiser: _promiser, exportDatabase });
+            setIsLoading(false);
+          }
+        );
+      }
+    );
   }, []);
 
   const exec = useCallback(
@@ -48,8 +54,28 @@ export const DatabaseProvider = ({ children }: Props) => {
     [promiser]
   );
 
+  // const exportDatabase = async () => {
+  //   const opfsRoot = await navigator.storage.getDirectory();
+
+  //   const fileHandle = await opfsRoot.getFileHandle(DB_NAME);
+
+  //   try {
+  //     const saveHandle = await showSaveFilePicker({
+  //       suggestedName: "lofextra.sqlite3",
+  //     });
+
+  //     const writable = await saveHandle.createWritable();
+
+  //     await writable.write(await fileHandle.getFile());
+
+  //     await writable.close();
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+
   return (
-    <DatabaseContext.Provider value={{ exec }}>
+    <DatabaseContext.Provider value={{ exec, exportDatabase }}>
       <main className={styles.main}>{isLoading ? "loading..." : children}</main>
     </DatabaseContext.Provider>
   );

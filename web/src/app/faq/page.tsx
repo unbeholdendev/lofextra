@@ -75,7 +75,7 @@ export default function Page() {
 
         <div className={styles.question}>is something not working?</div>
         <div className={styles.answer}>
-          please create in{" "}
+          please create an{" "}
           <a
             href="https://github.com/pycan-jouza/lofextra/issues"
             target="_blank"
