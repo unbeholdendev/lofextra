@@ -4,7 +4,7 @@ import { socketConnectionsMap } from './connections'
 import { registerOnMessagesHandler } from './handlers'
 import { httpServer } from './http'
 import { io } from './io'
-import { syncMessages } from './lib'
+import { syncMessages } from './syncMessages'
 import { prisma } from './prisma'
 
 httpServer.listen(process.env.PORT || 8080)
