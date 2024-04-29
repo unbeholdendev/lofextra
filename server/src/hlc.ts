@@ -4,7 +4,7 @@ type HLC = {
   deviceId: string
 }
 
-export const deserialize = (serialized: string) => {
+export const deserialize = (serialized: string): HLC => {
   const [ts, count, ...deviceId] = serialized.split(':')
 
   return {
@@ -14,7 +14,7 @@ export const deserialize = (serialized: string) => {
   }
 }
 
-export const cmp = (one: HLC, two: HLC) => {
+export const cmp = (one: HLC, two: HLC): number => {
   if (one.ts === two.ts) {
     if (one.count === two.count) {
       if (one.deviceId === two.deviceId) {
