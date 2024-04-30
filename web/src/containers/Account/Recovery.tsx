@@ -5,7 +5,8 @@ export const Recovery = () => {
 
   return (
     <div>
-      <h3>Recovery</h3>
+      <h3>recovery</h3>
+      <p>download all your data in a single database file</p>
       <button onClick={exportDatabase}>export</button>
     </div>
   );

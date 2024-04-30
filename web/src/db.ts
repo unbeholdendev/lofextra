@@ -15,7 +15,7 @@ export type SelectRow = {
   rowNumber: number;
 };
 
-export const DB_NAME = "mydb.sqlite3";
+const DB_NAME = "mydb.sqlite3";
 
 export const initDatabase = async (
   sqlite3Worker1Promiser: (...args: unknown[]) => unknown
@@ -30,7 +30,7 @@ export const initDatabase = async (
     }
   );
 
-  // @ts-ignore
+  // @ts-expect-error
   const { dbId } = await promiser("open", {
     filename: `file:${DB_NAME}?vfs=opfs`,
   });
@@ -39,7 +39,7 @@ export const initDatabase = async (
   await seed(promiser);
 
   const exportDatabase = async () => {
-    // @ts-ignore
+    // @ts-expect-error
     const { result } = await promiser("export", { dbId });
 
     const blob = new Blob([result.byteArray], {

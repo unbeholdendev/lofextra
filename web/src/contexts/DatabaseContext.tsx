@@ -21,7 +21,7 @@ type Props = {
 
 export const DatabaseProvider = ({ children }: Props) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [{ promiser, exportDatabase }, setDb] = useState({
+  const [{ promiser, exportDatabase }, setPromiser] = useState({
     promiser: (..._args: unknown[]) => new Promise(() => {}),
     exportDatabase: () => new Promise(() => {}),
   });
@@ -32,7 +32,7 @@ export const DatabaseProvider = ({ children }: Props) => {
       ({ sqlite3Worker1Promiser }) => {
         initDatabase(sqlite3Worker1Promiser).then(
           ({ promiser: _promiser, exportDatabase }) => {
-            setDb({ promiser: _promiser, exportDatabase });
+            setPromiser({ promiser: _promiser, exportDatabase });
             setIsLoading(false);
           }
         );
@@ -53,6 +53,9 @@ export const DatabaseProvider = ({ children }: Props) => {
     },
     [promiser]
   );
+
+  // this is a better approach for exporting the database
+  // but unfortunately not supported in some major browsers yet (mozilla)
 
   // const exportDatabase = async () => {
   //   const opfsRoot = await navigator.storage.getDirectory();
