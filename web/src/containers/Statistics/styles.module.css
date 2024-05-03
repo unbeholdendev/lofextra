@@ -1,0 +1,14 @@
+.buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.scroll {
+  overflow-y: scroll;
+}
+
+.large {
+  font-size: 1.5rem;
+}

@@ -24,7 +24,7 @@ export const useQuery = <T extends ZodSchema>(
     () =>
       cache[query] ?? {
         data: undefined,
-        isLoading: false,
+        isLoading: true,
       },
     [cache, query]
   );

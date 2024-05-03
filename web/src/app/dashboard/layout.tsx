@@ -25,17 +25,25 @@ export default function Layout({
             </li>
           </ul>
 
-          {pathname.includes("dashboard") && (
-            <ul>
+          <ul>
+            {pathname !== "/dashboard" && (
               <li>
-                {pathname.includes("account") ? (
-                  <Link href="/dashboard">dashboard</Link>
-                ) : (
-                  <Link href="/dashboard/account">account</Link>
-                )}
+                <Link href="/dashboard">dashboard</Link>
               </li>
-            </ul>
-          )}
+            )}
+
+            {!pathname.includes("statistics") && (
+              <li>
+                <Link href="/dashboard/statistics">statistics</Link>
+              </li>
+            )}
+
+            {!pathname.includes("account") && (
+              <li>
+                <Link href="/dashboard/account">account</Link>
+              </li>
+            )}
+          </ul>
         </nav>
       </header>
 

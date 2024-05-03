@@ -40,7 +40,7 @@ export const AccountProvider = ({ children }: Props) => {
   const deviceId = useMemo(() => deviceData?.[0].id, [deviceData]);
 
   if (!keyPair || !deviceId) {
-    return <>authenticating..</>;
+    return <div aria-busy="true" />;
   }
 
   return (

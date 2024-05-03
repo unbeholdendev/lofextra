@@ -79,7 +79,9 @@ export const DatabaseProvider = ({ children }: Props) => {
 
   return (
     <DatabaseContext.Provider value={{ exec, exportDatabase }}>
-      <main className={styles.main}>{isLoading ? "loading..." : children}</main>
+      <main className={styles.main}>
+        {isLoading ? <div aria-busy="true" /> : children}
+      </main>
     </DatabaseContext.Provider>
   );
 };

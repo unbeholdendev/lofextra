@@ -10,7 +10,10 @@ type Props = {
   onDetailClick: (transaction: TransactionType) => void;
 };
 export const Transaction = ({ transaction, onDetailClick }: Props) => {
-  const { data } = useQuery("select * from categories", categoriesSchema);
+  const { data } = useQuery(
+    "select * from categories where deletedAt is null",
+    categoriesSchema
+  );
 
   const category = useMemo(
     () => data?.find((category) => category.id === transaction.categoryId),

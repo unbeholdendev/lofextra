@@ -9,7 +9,10 @@ type Props = {
   HTMLSelectElement
 >;
 export const CategoryPicker = ({ name, ...props }: Props) => {
-  const { data } = useQuery("select * from categories", categoriesSchema);
+  const { data } = useQuery(
+    "select * from categories where deletedAt is null",
+    categoriesSchema
+  );
   const { register } = useFormContext();
 
   return (
