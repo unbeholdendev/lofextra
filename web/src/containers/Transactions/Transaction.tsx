@@ -1,5 +1,6 @@
 import { useQuery } from "@/hooks/useQuery";
 import { getDateFromTimestamp } from "@/utils/dates";
+import { formatNumber } from "@/utils/formatters";
 import { Transaction as TransactionType } from "@/validators/types";
 import { categoriesSchema } from "@/validators/validators";
 import { useMemo } from "react";
@@ -39,7 +40,7 @@ export const Transaction = ({ transaction, onDetailClick }: Props) => {
 
       <div>
         <p className={styles["margin-bottom"]}>
-          <strong>{transaction.amount}</strong>
+          <strong>{formatNumber(transaction.amount)}</strong>
         </p>
 
         <p className={`${styles["margin-bottom"]} ${styles.small}`}>

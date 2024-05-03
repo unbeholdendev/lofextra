@@ -32,3 +32,9 @@ export const getTimestampAfterSubtractingDays = (days: number) => {
 
   return now.getTime();
 };
+
+export const getStartOfMonth = (date: Date) =>
+  new Date(date.getFullYear(), date.getMonth(), 1);
+
+export const getEndOfMonth = (date: Date) =>
+  new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59);
