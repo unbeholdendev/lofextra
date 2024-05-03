@@ -145,7 +145,15 @@ export const Statistics = () => {
 
         {data?.map(({ total, categoryTitle, categoryId }) => (
           <p key={categoryId}>
-            {categoryTitle}: <strong>{formatNumber(total)}</strong>
+            {categoryTitle}: <strong>{formatNumber(total)}</strong>{" "}
+            <span className={styles.small}>
+              (
+              {(total / totalInPeriod).toLocaleString(undefined, {
+                style: "percent",
+                minimumFractionDigits: 2,
+              })}
+              )
+            </span>
           </p>
         ))}
       </div>

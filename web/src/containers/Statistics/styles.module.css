@@ -18,3 +18,7 @@
   max-width: 230px;
   margin-bottom: 0 !important;
 }
+
+.small {
+  font-size: 0.8rem;
+}

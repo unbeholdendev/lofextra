@@ -1,4 +1,5 @@
 import { getUnixTimestamp } from "@/utils/dates";
+import { formatNumber } from "@/utils/formatters";
 import { Dispatch, SetStateAction } from "react";
 import { ModalTransaction } from "./TransactionFormModal";
 import styles from "./styles.module.css";
@@ -14,7 +15,7 @@ export const Overview = ({ total, setModalTransaction }: Props) => {
       <div>
         <div>last 30 days spent</div>
         <div className={styles.large}>
-          <strong>{total || 0}</strong>
+          <strong>{formatNumber(total || 0)}</strong>
         </div>
       </div>
 
