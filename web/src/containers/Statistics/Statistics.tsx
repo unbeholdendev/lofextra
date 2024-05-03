@@ -1,6 +1,7 @@
 import { useAccountContext } from "@/hooks/contexts";
 import { useQuery } from "@/hooks/useQuery";
 import {
+  getEndOfDay,
   getEndOfMonth,
   getStartOfMonth,
   getTimestampAfterSubtractingDays,
@@ -13,19 +14,26 @@ import styles from "./styles.module.css";
 const DAYS_AGO_30_TS = getTimestampAfterSubtractingDays(30);
 const DAYS_AGO_90_TS = getTimestampAfterSubtractingDays(90);
 const DAYS_AGO_365_TS = getTimestampAfterSubtractingDays(365);
-//const RANGE = -1;
+const RANGE = -1;
 const MONTH = -2;
 
 const currentDate = new Date();
 const currentYear = currentDate.getFullYear();
 const currentMonth = currentDate.getMonth() + 1;
+const currentMonthFormatted =
+  currentMonth > 9 ? currentMonth : `0${currentMonth}`;
+const currentDay = currentDate.getDate();
+const currentDayFormatted = currentDay > 9 ? currentDay : `0${currentDay}`;
+const currentDateFormatted = `${currentYear}-${currentMonthFormatted}-${currentDayFormatted}`;
 
 export const Statistics = () => {
   const { pubKeyHex } = useAccountContext();
   const [statsInterval, setStatsInterval] = useState(DAYS_AGO_30_TS);
   const [monthInterval, setMonthInterval] = useState(
-    `${currentYear}-${currentMonth > 9 ? currentMonth : `0${currentMonth}`}`
+    `${currentYear}-${currentMonthFormatted}`
   );
+  const [rangeStart, setRangeStart] = useState(currentDateFormatted);
+  const [rangeEnd, setRangeEnd] = useState(currentDateFormatted);
 
   const intervalCondition = useMemo(() => {
     if (statsInterval === MONTH) {
@@ -36,8 +44,16 @@ export const Statistics = () => {
       ).getTime()} and t.createdAt < ${getEndOfMonth(monthDate).getTime()}`;
     }
 
+    if (statsInterval === RANGE) {
+      return `t.createdAt > ${new Date(
+        rangeStart
+      ).getTime()} and t.createdAt < ${getEndOfDay(
+        new Date(rangeEnd)
+      ).getTime()}`;
+    }
+
     return `t.createdAt > ${statsInterval}`;
-  }, [statsInterval, monthInterval]);
+  }, [statsInterval, monthInterval, rangeStart, rangeEnd]);
 
   const { data } = useQuery(
     `select sum(amount) as total, coalesce(c.title, '<no category>') AS categoryTitle, coalesce(c.id, '-1') AS categoryId from transactions t left join categories c on c.id = t.categoryId and c.deletedAt is null where pubKeyHex = '${pubKeyHex}' and t.deletedAt is null and ${intervalCondition} group by categoryId order by total desc`,
@@ -87,12 +103,37 @@ export const Statistics = () => {
           month
         </button>
 
+        <button
+          className={statsInterval === RANGE ? "" : "outline"}
+          onClick={() => setStatsInterval(RANGE)}
+        >
+          range
+        </button>
+
         {statsInterval === MONTH && (
           <input
             type="month"
             className={styles.input}
             value={monthInterval}
             onChange={(e) => setMonthInterval(e.target.value)}
+          />
+        )}
+
+        {statsInterval === RANGE && (
+          <input
+            type="date"
+            className={styles.input}
+            value={rangeStart}
+            onChange={(e) => setRangeStart(e.target.value)}
+          />
+        )}
+
+        {statsInterval === RANGE && (
+          <input
+            type="date"
+            className={styles.input}
+            value={rangeEnd}
+            onChange={(e) => setRangeEnd(e.target.value)}
           />
         )}
       </div>
