@@ -25,7 +25,7 @@ export const Dashboard = () => {
   );
 
   const { data: transactions, refetch: refetchTransactions } = useQuery(
-    `select * from transactions where pubKeyHex = '${pubKeyHex}' and deletedAt is null order by createdAt desc`,
+    `select * from transactions where pubKeyHex = '${pubKeyHex}' and deletedAt is null and createdAt > ${DAYS_AGO_30_TS} order by createdAt desc`,
     transactionsSchema,
     { refetchOnRemoteUpdate: true }
   );
