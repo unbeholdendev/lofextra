@@ -32,11 +32,11 @@ Saves you time so that you don't have to input transactions that happen on regul
 
 #### Progressive Web App [DONE]
 
-Ability to make the web version feel like a native app
+Ability to make the web version feel like a native app.
 
-#### Mobile version
+#### Statistics [DONE]
 
-Even though the app can be used on the web, it's more likely a mobile app by nature. I've chosen web as the first platform because I'm more familiar with it.
+View your spending across categories in a given time period.
 
 #### Budgeting
 
