@@ -3183,6 +3183,11 @@ magic-string@^0.25.0, magic-string@^0.25.7:
   dependencies:
     sourcemap-codec "^1.4.8"
 
+math-expression-evaluator@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/math-expression-evaluator/-/math-expression-evaluator-2.0.5.tgz#df2852dc7afdcf0e5105603e2a0e54e817de8ba6"
+  integrity sha512-C8Ifr3BpZ1E8ncWiHltndUkimvkzBwEiXPRyDJVxspo/G7zSN8tLHwFVfrGotvWzu2wuRkjnxaEayFblepmN5Q==
+
 merge-stream@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/merge-stream/-/merge-stream-2.0.0.tgz#52823629a14dd00c9770fb6ad47dc6310f2c1f60"

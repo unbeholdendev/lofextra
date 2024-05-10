@@ -15,6 +15,7 @@ import {
   Transaction as TransactionType,
 } from "@/validators/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Mexp from "math-expression-evaluator";
 import { TypeOf, z } from "zod";
 import styles from "./styles.module.css";
 
@@ -31,12 +32,14 @@ type Props = {
 
 const schema = z.object({
   title: z.string().min(1),
-  amount: z.number(),
+  amount: z.string(),
   categoryId: z.string().nullable(),
   createdAt: z.string(),
 });
 
 type FormValues = TypeOf<typeof schema>;
+
+const mexp = new Mexp();
 
 export const TransactionFormModal = ({
   transaction,
@@ -56,14 +59,24 @@ export const TransactionFormModal = ({
     title,
     amount,
     createdAt,
-  }: FormValues) =>
+  }: FormValues) => {
+    let amountEval: number;
+
+    try {
+      amountEval = mexp.eval(amount);
+    } catch (err) {
+      alert(err);
+
+      return;
+    }
+
     mutate({
       operation: DatabaseMutationOperation.Upsert,
       tableName: "transactions",
       columnDataMap: {
         id: transaction.id || crypto.randomUUID(),
         title,
-        amount: Math.abs(amount),
+        amount: Math.abs(amountEval),
         pubKeyHex: pubKeyHex,
         categoryId: categoryId || null,
         deletedAt: null,
@@ -72,6 +85,7 @@ export const TransactionFormModal = ({
         ),
       },
     });
+  };
 
   const onDelete = async () =>
     mutate({
@@ -91,7 +105,7 @@ export const TransactionFormModal = ({
             getDateFromTimestamp(transaction.createdAt)
           ),
           title: transaction.title,
-          amount: transaction.amount ?? NaN,
+          amount: transaction.amount?.toString() ?? "",
         }}
       >
         <fieldset>
@@ -104,13 +118,7 @@ export const TransactionFormModal = ({
               <CategoryPicker name="categoryId" />
             </div>
 
-            <Input
-              name="amount"
-              options={{ valueAsNumber: true }}
-              placeholder="amount"
-              type="number"
-              aria-label="amount"
-            />
+            <Input name="amount" placeholder="amount" aria-label="amount" />
           </div>
         </fieldset>
 
