@@ -1,0 +1,32 @@
+.scroll {
+  overflow-y: scroll;
+}
+
+.category-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
+.category-row:hover {
+  background: var(--pico-text-selection-color);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.flex {
+  flex: 1;
+}
+
+.flex-container {
+  display: flex;
+  gap: 1rem;
+}
+
+.action-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}

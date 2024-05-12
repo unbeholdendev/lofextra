@@ -77,7 +77,7 @@ export const TransactionFormModal = ({
         id: transaction.id || crypto.randomUUID(),
         title,
         amount: Math.abs(amountEval),
-        pubKeyHex: pubKeyHex,
+        pubKeyHex,
         categoryId: categoryId || null,
         deletedAt: null,
         createdAt: getUnixTimestamp(
@@ -95,7 +95,14 @@ export const TransactionFormModal = ({
     });
 
   return (
-    <Modal onClose={onClose} header={<strong>add expense</strong>}>
+    <Modal
+      onClose={onClose}
+      header={
+        <strong>
+          {transaction.id ? "update or delete expense" : "add expense"}
+        </strong>
+      }
+    >
       <Form<FormValues>
         onSubmit={onSubmit}
         resolver={zodResolver(schema)}
@@ -118,7 +125,12 @@ export const TransactionFormModal = ({
               <CategoryPicker name="categoryId" />
             </div>
 
-            <Input name="amount" placeholder="amount" aria-label="amount" />
+            <Input
+              name="amount"
+              placeholder="5+5"
+              aria-label="amount"
+              inputMode="numeric"
+            />
           </div>
         </fieldset>
 

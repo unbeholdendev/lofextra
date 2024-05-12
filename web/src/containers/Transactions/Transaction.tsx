@@ -1,3 +1,4 @@
+import { useAccountContext } from "@/hooks/contexts";
 import { useQuery } from "@/hooks/useQuery";
 import { getDateFromTimestamp } from "@/utils/dates";
 import { formatNumber } from "@/utils/formatters";
@@ -11,9 +12,12 @@ type Props = {
   onDetailClick: (transaction: TransactionType) => void;
 };
 export const Transaction = ({ transaction, onDetailClick }: Props) => {
+  const { pubKeyHex } = useAccountContext();
+
   const { data } = useQuery(
-    "select * from categories where deletedAt is null",
-    categoriesSchema
+    `select * from categories where pubKeyHex = '${pubKeyHex}' and deletedAt is null`,
+    categoriesSchema,
+    { refetchOnRemoteUpdate: true }
   );
 
   const category = useMemo(

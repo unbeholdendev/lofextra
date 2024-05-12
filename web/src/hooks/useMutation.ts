@@ -1,6 +1,7 @@
 import { HLC } from "@/contexts/HlcContext";
-import { utils } from "@/db";
+import { utils } from "@/db/db";
 import { socket } from "@/io";
+import { getUnixTimestamp } from "@/utils/dates";
 import { inc, serialize } from "@/utils/hlc";
 import {
   DatabaseMutationOperation,
@@ -35,7 +36,7 @@ export const useMutation = (options?: MutationOptions) => {
     async (mutation: GenerateDatabaseMutation) => {
       setIsLoading(true);
 
-      const updatedHlc = inc(hlc, Date.now());
+      const updatedHlc = inc(hlc, getUnixTimestamp());
 
       setHlc(updatedHlc);
 
@@ -98,7 +99,7 @@ const useServerSync = () => {
               tableName: "pendingUpdates",
               columnDataMap: {
                 message: JSON.stringify(message),
-                createdAt: Date.now(),
+                createdAt: getUnixTimestamp(),
               },
             },
             hlc

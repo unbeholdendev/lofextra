@@ -1,5 +1,5 @@
 import styles from "@/app/dashboard/styles.module.css";
-import { SelectRow, initDatabase, utils } from "@/db";
+import { SelectRow, initDatabase, utils } from "@/db/db";
 import {
   ReactNode,
   createContext,

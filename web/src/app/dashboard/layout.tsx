@@ -38,6 +38,12 @@ export default function Layout({
               </li>
             )}
 
+            {!pathname.includes("categories") && (
+              <li>
+                <Link href="/dashboard/categories">categories</Link>
+              </li>
+            )}
+
             {!pathname.includes("account") && (
               <li>
                 <Link href="/dashboard/account">account</Link>

@@ -14,21 +14,9 @@ This expense tracker differs from other apps of similar nature by storing all th
 
 Other important aspect is offline support. The app works offline seamlessly when you install it as a [PWA](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps), the updates are synced when you come back online. Possible conflicts are resolved using LWW (last write wins) algorithm enhanced with [Hybrid Logical Clock](https://jaredforsyth.com/posts/hybrid-logical-clocks/).
 
-### Features
-
-The current version of the app is mostly proof of concept. It offers mnemonics, data encryption/decryption, synchronization, offline support. As for the expense tracking part, the most core features that I'm used to using are supported. Users can add transactions, edit and delete them, attach one of the predefined categories, see their total spending over the last 30 days.
-
 ### Plans
 
 Upcoming plans & features.
-
-#### Multiple currencies
-
-You're on vacation and pay in a different currency? This is the basic use case that should be supported. The plan is to pull the exchange rate from some open API when adding/editing transaction with a non-default currency and display the expense amount in both currencies.
-
-#### Recurring transactions
-
-Saves you time so that you don't have to input transactions that happen on regular basis.
 
 #### Progressive Web App [DONE]
 
@@ -37,6 +25,18 @@ Ability to make the web version feel like a native app.
 #### Statistics [DONE]
 
 View your spending across categories in a given time period.
+
+#### Categories [DONE]
+
+Manage your own custom categories.
+
+#### Multiple currencies
+
+You're on vacation and pay in a different currency? This is the basic use case that should be supported. The plan is to pull the exchange rate from some open API when adding/editing transaction with a non-default currency and display the expense amount in both currencies.
+
+#### Recurring transactions
+
+Saves you time so that you don't have to input transactions that happen on regular basis.
 
 #### Budgeting
 

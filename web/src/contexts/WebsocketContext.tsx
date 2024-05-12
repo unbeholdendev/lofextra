@@ -1,4 +1,4 @@
-import { handleRemoteDatabaseMutation } from "@/db";
+import { handleRemoteDatabaseMutation } from "@/db/db";
 import {
   useAccountContext,
   useDatabaseContext,
@@ -6,6 +6,7 @@ import {
   useQueryCacheContext,
 } from "@/hooks/contexts";
 import { usePushPendingUpdates } from "@/hooks/usePushPendingUpdates";
+import { getUnixTimestamp } from "@/utils/dates";
 import { xchacha20poly1305 } from "@noble/ciphers/chacha";
 import { bytesToUtf8, hexToBytes } from "@noble/ciphers/utils";
 import { sha256 } from "@noble/hashes/sha256";
@@ -72,7 +73,7 @@ export const WebsocketProvider = ({ children }: Props) => {
           mutation: validatedData,
         });
 
-        setHlc(recv(hlc, messageHlc, Date.now()));
+        setHlc(recv(hlc, messageHlc, getUnixTimestamp()));
       }
 
       ack();

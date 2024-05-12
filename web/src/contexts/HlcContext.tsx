@@ -1,4 +1,5 @@
 import { useAccountContext } from "@/hooks/contexts";
+import { getUnixTimestamp } from "@/utils/dates";
 import { ReactNode, createContext, useState } from "react";
 
 export type HLC = {
@@ -20,7 +21,11 @@ type Props = {
 
 export const HlcProvider = ({ children }: Props) => {
   const { deviceId } = useAccountContext();
-  const [hlc, setHlc] = useState<HLC>({ ts: Date.now(), count: 0, deviceId });
+  const [hlc, setHlc] = useState<HLC>({
+    ts: getUnixTimestamp(),
+    count: 0,
+    deviceId,
+  });
 
   return (
     <HlcContext.Provider value={{ hlc, setHlc }}>

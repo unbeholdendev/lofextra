@@ -1,5 +1,6 @@
 import { schnorr } from "@noble/curves/secp256k1";
 import { sha256 } from "@noble/hashes/sha256";
+import { bytesToHex } from "@noble/hashes/utils";
 import {
   generateMnemonic,
   mnemonicToEntropy,
@@ -29,3 +30,6 @@ const getKeyPair = (mnemonic: string) => {
 
   return { privKey, pubKey };
 };
+
+export const getPubKeyHex = (pubKey: string) =>
+  bytesToHex(new Uint8Array(pubKey.split(",").map(Number)));

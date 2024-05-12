@@ -1,3 +1,4 @@
+import { useAccountContext } from "@/hooks/contexts";
 import { useQuery } from "@/hooks/useQuery";
 import { categoriesSchema } from "@/validators/validators";
 import { useFormContext } from "react-hook-form";
@@ -9,8 +10,10 @@ type Props = {
   HTMLSelectElement
 >;
 export const CategoryPicker = ({ name, ...props }: Props) => {
+  const { pubKeyHex } = useAccountContext();
+
   const { data } = useQuery(
-    "select * from categories where deletedAt is null",
+    `select * from categories where pubKeyHex = '${pubKeyHex}' and deletedAt is null`,
     categoriesSchema
   );
   const { register } = useFormContext();
