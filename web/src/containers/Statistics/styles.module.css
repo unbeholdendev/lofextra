@@ -22,3 +22,31 @@
 .small {
   font-size: 0.8rem;
 }
+
+.statistics-row {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
+.statistics-row:hover {
+  background: var(--pico-text-selection-color);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.margin-bottom {
+  margin-bottom: 0.2rem;
+}
+
+.transaction-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.transaction-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}

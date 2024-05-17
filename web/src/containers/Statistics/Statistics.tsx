@@ -9,6 +9,7 @@ import {
 import { formatNumber } from "@/utils/formatters";
 import { useMemo, useState } from "react";
 import { z } from "zod";
+import { StatisticsDetailModal } from "./StatisticsDetailModal";
 import styles from "./styles.module.css";
 
 const DAYS_AGO_30_TS = getTimestampAfterSubtractingDays(30);
@@ -35,6 +36,12 @@ export const Statistics = () => {
   const [rangeStart, setRangeStart] = useState(currentDateFormatted);
   const [rangeEnd, setRangeEnd] = useState(currentDateFormatted);
 
+  const [detailCategory, setDetailCategory] = useState<{
+    categoryId: string;
+    categoryTitle: string;
+    categoryTotal: number;
+  } | null>(null);
+
   const intervalCondition = useMemo(() => {
     if (statsInterval === MONTH) {
       const monthDate = new Date(monthInterval);
@@ -56,10 +63,10 @@ export const Statistics = () => {
   }, [statsInterval, monthInterval, rangeStart, rangeEnd]);
 
   const { data } = useQuery(
-    `select sum(amount) as total, coalesce(c.title, '<no category>') AS categoryTitle, coalesce(c.id, '-1') AS categoryId from transactions t left join categories c on c.id = t.categoryId and c.deletedAt is null where t.pubKeyHex = '${pubKeyHex}' and t.deletedAt is null and ${intervalCondition} group by categoryId order by total desc`,
+    `select sum(amount) as categoryTotal, coalesce(c.title, '<no category>') AS categoryTitle, coalesce(c.id, '-1') AS categoryId from transactions t left join categories c on c.id = t.categoryId and c.deletedAt is null where t.pubKeyHex = '${pubKeyHex}' and t.deletedAt is null and ${intervalCondition} group by categoryId order by categoryTotal desc`,
     z.array(
       z.object({
-        total: z.number(),
+        categoryTotal: z.number(),
         categoryTitle: z.string(),
         categoryId: z.string(),
       })
@@ -68,7 +75,7 @@ export const Statistics = () => {
   );
 
   const totalInPeriod = useMemo(
-    () => data?.reduce((acc, curr) => acc + curr.total, 0) ?? 0,
+    () => data?.reduce((acc, curr) => acc + curr.categoryTotal, 0) ?? 0,
     [data]
   );
 
@@ -143,12 +150,22 @@ export const Statistics = () => {
           Total in period: <strong>{formatNumber(totalInPeriod)}</strong>
         </p>
 
-        {data?.map(({ total, categoryTitle, categoryId }) => (
-          <p key={categoryId}>
-            {categoryTitle}: <strong>{formatNumber(total)}</strong>{" "}
+        {data?.map(({ categoryTotal, categoryTitle, categoryId }) => (
+          <p
+            key={categoryId}
+            className={styles["statistics-row"]}
+            onClick={() =>
+              setDetailCategory({
+                categoryId,
+                categoryTitle,
+                categoryTotal,
+              })
+            }
+          >
+            {categoryTitle}: <strong>{formatNumber(categoryTotal)}</strong>{" "}
             <span className={styles.small}>
               (
-              {(total / totalInPeriod).toLocaleString(undefined, {
+              {(categoryTotal / totalInPeriod).toLocaleString(undefined, {
                 style: "percent",
                 minimumFractionDigits: 2,
               })}
@@ -157,6 +174,16 @@ export const Statistics = () => {
           </p>
         ))}
       </div>
+
+      {detailCategory && (
+        <StatisticsDetailModal
+          categoryId={detailCategory.categoryId}
+          categoryTitle={detailCategory.categoryTitle}
+          categoryTotal={detailCategory.categoryTotal}
+          intervalCondition={intervalCondition}
+          onClose={() => setDetailCategory(null)}
+        />
+      )}
     </>
   );
 };
