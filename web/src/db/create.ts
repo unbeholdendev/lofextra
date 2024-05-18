@@ -60,7 +60,6 @@ export const createTables = async (
           CREATE TABLE IF NOT EXISTS categories (
               id VARCHAR(40) PRIMARY KEY,
               title TEXT NOT NULL,
-              pubKeyHex TEXT NOT NULL,
               deletedAt INTEGER,
               updatedAt INTEGER NOT NULL,
               createdAt INTEGER NOT NULL
