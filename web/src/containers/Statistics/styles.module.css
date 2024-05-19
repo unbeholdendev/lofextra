@@ -42,7 +42,14 @@
 .transaction-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
+.transaction-row:hover {
+  background: var(--pico-text-selection-color);
+  cursor: pointer;
+  transition: 0.3s;
 }
 
 .transaction-column {

@@ -26,7 +26,6 @@ export type ModalTransaction = Omit<
 
 type Props = {
   transaction: ModalTransaction;
-  onSuccess: () => void;
   onClose: () => void;
 };
 
@@ -41,15 +40,11 @@ type FormValues = TypeOf<typeof schema>;
 
 const mexp = new Mexp();
 
-export const TransactionFormModal = ({
-  transaction,
-  onSuccess,
-  onClose,
-}: Props) => {
+export const TransactionFormModal = ({ transaction, onClose }: Props) => {
   const { pubKeyHex } = useAccountContext();
   const { mutate } = useMutation({
+    refetchAll: true,
     onSettled: () => {
-      onSuccess();
       onClose();
     },
   });

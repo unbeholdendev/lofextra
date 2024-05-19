@@ -17,20 +17,29 @@ import {
   useAccountContext,
   useDatabaseContext,
   useHlcContext,
+  useQueryCacheContext,
 } from "./contexts";
 
 type MutationOptions = {
   onSettled: () => void;
   shouldSync?: boolean;
+  refetchAll?: boolean;
 };
 
 export const useMutation = (options?: MutationOptions) => {
   const { exec } = useDatabaseContext();
+  const { setCache, setCacheRefetchDate } = useQueryCacheContext();
   const [isLoading, setIsLoading] = useState(false);
   const { hlc, setHlc } = useHlcContext();
   const { sync } = useServerSync();
 
-  const shouldSync = options?.shouldSync ?? true;
+  const { shouldSync, refetchAll } = useMemo(
+    () => ({
+      shouldSync: options?.shouldSync ?? true,
+      refetchAll: options?.refetchAll ?? false,
+    }),
+    [options]
+  );
 
   const mutate = useCallback(
     async (mutation: GenerateDatabaseMutation) => {
@@ -53,8 +62,23 @@ export const useMutation = (options?: MutationOptions) => {
       if (shouldSync) {
         sync(mutation, updatedHlc);
       }
+
+      if (refetchAll) {
+        setCache({});
+        setCacheRefetchDate(new Date());
+      }
     },
-    [shouldSync, exec, options, sync, hlc, setHlc]
+    [
+      shouldSync,
+      refetchAll,
+      exec,
+      options,
+      sync,
+      hlc,
+      setHlc,
+      setCache,
+      setCacheRefetchDate,
+    ]
   );
 
   return useMemo(

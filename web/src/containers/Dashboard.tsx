@@ -18,13 +18,13 @@ export const Dashboard = () => {
   const [modalTransaction, setModalTransaction] =
     useState<ModalTransaction | null>(null);
 
-  const { data: totalData, refetch: refetchTotal } = useQuery(
+  const { data: totalData } = useQuery(
     `select sum(amount) as total from transactions where pubKeyHex = '${pubKeyHex}' and deletedAt is null and createdAt > ${DAYS_AGO_30_TS}`,
     z.array(z.object({ total: z.number().nullable() })),
     { refetchOnRemoteUpdate: true }
   );
 
-  const { data: transactions, refetch: refetchTransactions } = useQuery(
+  const { data: transactions } = useQuery(
     `select * from transactions where pubKeyHex = '${pubKeyHex}' and deletedAt is null and createdAt > ${DAYS_AGO_30_TS} order by createdAt desc`,
     transactionsSchema,
     { refetchOnRemoteUpdate: true }
@@ -44,10 +44,6 @@ export const Dashboard = () => {
       {modalTransaction && (
         <TransactionFormModal
           transaction={modalTransaction}
-          onSuccess={() => {
-            refetchTotal();
-            refetchTransactions();
-          }}
           onClose={() => setModalTransaction(null)}
         />
       )}
