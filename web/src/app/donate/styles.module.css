@@ -1,0 +1,42 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+  flex: 1;
+}
+
+.margin-horizontal {
+  margin: 0 0.2rem;
+}
+
+.center {
+  text-align: center;
+}
+
+.margin-top {
+  margin-top: 0.5rem;
+}
+
+.copy {
+  cursor: pointer;
+}
+
+.columns {
+  display: flex;
+  word-break: break-all;
+  margin-top: 1rem;
+  text-align: center;
+
+  @media only screen and (max-width: 576px) {
+    flex-direction: column;
+  }
+}
+
+.flex {
+  flex: 1;
+
+  @media only screen and (max-width: 576px) {
+    margin-bottom: 1rem;
+  }
+}

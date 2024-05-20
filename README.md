@@ -60,6 +60,10 @@ I'm doing this in my free time to solve my own need and also spread privacy-focu
 
 I've strongly considered using [Evolu](https://www.evolu.dev/) as a tool for building local-first app. Despite the maintainer's effort to offer a straightforward solution comprehensible to all developers, the library's integration of [Effect](https://effect.website/), a tool not widely adopted among developers, doesn't help achieving this goal. Furthermore, I wasn't able to make it run at all, always ran into errors so it eventually became a debugging hell. You shouldn't have to struggle with a library like that.
 
+### Donate
+
+If you find this app at least a tiny bit helpful and want to support the work that I do in my free time, you can do so [here](https://lofextra.com/donate). I really appreciate it, thank you.
+
 ### Disclaimer
 
 The app is using [Plausible](https://plausible.io/) analytics to collect anonymous data about the page visits. I'd like to have a general idea how many people are using lofextra.

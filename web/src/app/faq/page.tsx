@@ -1,3 +1,4 @@
+import Link from "next/link";
 import styles from "./styles.module.css";
 
 export default function Page() {
@@ -83,6 +84,12 @@ export default function Page() {
           >
             issue
           </a>
+        </div>
+
+        <div className={styles.question}>can i make a donation?</div>
+        <div className={styles.answer}>
+          i would really appreciate it. please, go{" "}
+          <Link href="/donate">here</Link>
         </div>
       </section>
     </main>

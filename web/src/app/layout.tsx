@@ -64,6 +64,8 @@ export default function RootLayout({
           >
             source code
           </a>
+
+          <Link href="/donate">donate</Link>
         </footer>
       </body>
     </html>
