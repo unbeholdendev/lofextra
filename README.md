@@ -58,7 +58,7 @@ I'm doing this in my free time to solve my own need and also spread privacy-focu
 
 ### Alternative solutions for building local-first apps
 
-I've strongly considered using [Evolu](https://www.evolu.dev/) as a tool for building local-first app. Despite the maintainer's effort to offer a straightforward solution comprehensible to all developers, the library's integration of [Effect](https://effect.website/), a tool not widely adopted among developers, doesn't help achieving this goal. Furthermore, I wasn't able to make it run at all, always ran into errors so it eventually became a debugging hell. You shouldn't have to struggle with a library like that.
+I've strongly considered using [Evolu](https://www.evolu.dev/) as a tool for building local-first app. Despite the maintainer's effort to offer a straightforward solution comprehensible to all developers, the library's integration of [Effect](https://effect.website/), a tool not widely adopted among developers, doesn't help achieving this goal. I personally didn't have a good developer experience with the project, therefore, I decided to build a custom solution and challenge myself a bit.
 
 ### Donate
 
