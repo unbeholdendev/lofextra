@@ -1,5 +1,6 @@
 import { useAccountContext } from "@/hooks/contexts";
-import { useQuery } from "@/hooks/useQuery";
+import { useLofiQuery } from "@/hooks/useLofiQuery";
+import { QueryKeys } from "@/queries";
 import { getDateFromTimestamp } from "@/utils/dates";
 import { formatNumber } from "@/utils/formatters";
 import { Transaction as TransactionType } from "@/validators/types";
@@ -14,11 +15,11 @@ type Props = {
 export const Transaction = ({ transaction, onDetailClick }: Props) => {
   const { pubKeyHex } = useAccountContext();
 
-  const { data } = useQuery(
-    `select * from categories where pubKeyHex = '${pubKeyHex}' and deletedAt is null`,
-    categoriesSchema,
-    { refetchOnRemoteUpdate: true }
-  );
+  const { data } = useLofiQuery({
+    sql: `select * from categories where pubKeyHex = '${pubKeyHex}' and deletedAt is null`,
+    schema: categoriesSchema,
+    queryKey: [QueryKeys.GET_CATEGORIES, pubKeyHex],
+  });
 
   const category = useMemo(
     () => data?.find((category) => category.id === transaction.categoryId),

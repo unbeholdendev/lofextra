@@ -3,10 +3,16 @@
 import { AccountProvider } from "@/contexts/AccountContext";
 import { DatabaseProvider } from "@/contexts/DatabaseContext";
 import { HlcProvider } from "@/contexts/HlcContext";
-import { QueryCacheProvider } from "@/contexts/QueryCacheContext";
 import { WebsocketProvider } from "@/contexts/WebsocketContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { refetchOnReconnect: false, refetchOnWindowFocus: false },
+  },
+});
 
 export default function Layout({
   children,
@@ -54,13 +60,13 @@ export default function Layout({
       </header>
 
       <DatabaseProvider>
-        <QueryCacheProvider>
+        <QueryClientProvider client={queryClient}>
           <AccountProvider>
             <HlcProvider>
               <WebsocketProvider>{children}</WebsocketProvider>
             </HlcProvider>
           </AccountProvider>
-        </QueryCacheProvider>
+        </QueryClientProvider>
       </DatabaseProvider>
     </>
   );

@@ -2,7 +2,7 @@ import { Form } from "@/components/Form";
 import { Input } from "@/components/Input";
 import { Modal } from "@/components/Modal";
 import { useAccountContext } from "@/hooks/contexts";
-import { useMutation } from "@/hooks/useMutation";
+import { useLofiMutation } from "@/hooks/useLofiMutation";
 import {
   Category as CategoryType,
   DatabaseMutationOperation,
@@ -30,9 +30,11 @@ type FormValues = TypeOf<typeof schema>;
 
 export const CategoryFormModal = ({ category, onSuccess, onClose }: Props) => {
   const { pubKeyHex } = useAccountContext();
-  const { mutate } = useMutation({
-    onSettled: () => {
+  const { mutate } = useLofiMutation({
+    shouldSync: true,
+    onSuccess: () => {
       onSuccess();
+
       onClose();
     },
   });

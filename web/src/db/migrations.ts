@@ -1,6 +1,6 @@
 import { getPubKeyHex } from "@/utils/account";
 import { getUnixTimestamp } from "@/utils/dates";
-import { SelectRow, utils } from "./db";
+import { OpfsDatabase } from "@sqlite.org/sqlite-wasm";
 import { getCurrentAccountPubKey } from "./seeds";
 
 enum Migrations {
@@ -8,11 +8,9 @@ enum Migrations {
   TransactionsCategoriesForeignKey = "TransactionsCategoriesForeignKey",
 }
 
-const categoriesPubKeyHexMigration = async (
-  promiser: (..._args: unknown[]) => Promise<unknown>
-) => {
+const categoriesPubKeyHexMigration = async (db: OpfsDatabase) => {
   const existingMigration = await findMigration(
-    promiser,
+    db,
     Migrations.CategoriesPubKeyHex
   );
 
@@ -20,13 +18,9 @@ const categoriesPubKeyHexMigration = async (
     return;
   }
 
-  await promiser("exec", {
-    sql: `
-              ALTER TABLE categories ADD pubKeyHex TEXT;
-          `,
-  });
+  db.exec({ sql: "ALTER TABLE categories ADD pubKeyHex TEXT;" });
 
-  const currentPubKey = await getCurrentAccountPubKey(promiser);
+  const currentPubKey = getCurrentAccountPubKey(db);
 
   if (!currentPubKey) {
     throw new Error("Missing pub key, this should not happen!");
@@ -34,27 +28,14 @@ const categoriesPubKeyHexMigration = async (
 
   const pubKeyHex = getPubKeyHex(currentPubKey);
 
-  await promiser("exec", {
-    sql: `
-              UPDATE categories SET pubKeyHex = '${pubKeyHex}';
-          `,
-  });
+  db.exec({ sql: `UPDATE categories SET pubKeyHex = '${pubKeyHex}';` });
 
-  // sqlite doesnt support modifying columns..
-  //   await promiser("exec", {
-  //     sql: `
-  //             ALTER TABLE categories ALTER COLUMN pubKeyHex TEXT NOT NULL;
-  //         `,
-  //   });
-
-  await createMigration(promiser, Migrations.CategoriesPubKeyHex);
+  createMigration(db, Migrations.CategoriesPubKeyHex);
 };
 
-const transactionsCategoriesForeignKeyMigration = async (
-  promiser: (..._args: unknown[]) => Promise<unknown>
-) => {
+const transactionsCategoriesForeignKeyMigration = async (db: OpfsDatabase) => {
   const existingMigration = await findMigration(
-    promiser,
+    db,
     Migrations.TransactionsCategoriesForeignKey
   );
 
@@ -62,65 +43,46 @@ const transactionsCategoriesForeignKeyMigration = async (
     return;
   }
 
-  await promiser("exec", {
+  db.exec({
     sql: `
-          CREATE TABLE IF NOT EXISTS transactions_new (
-              id VARCHAR(40) PRIMARY KEY,
-              title TEXT NOT NULL,
-              amount REAL NOT NULL,
-              currency TEXT DEFAULT 'USD',
-              pubKeyHex TEXT NOT NULL,
-              categoryId VARCHAR(40),
-              deletedAt INTEGER,
-              updatedAt INTEGER NOT NULL,
-              createdAt INTEGER NOT NULL
-          );
-      `,
+        CREATE TABLE IF NOT EXISTS transactions_new (
+          id VARCHAR(40) PRIMARY KEY,
+          title TEXT NOT NULL,
+          amount REAL NOT NULL,
+          currency TEXT DEFAULT 'USD',
+          pubKeyHex TEXT NOT NULL,
+          categoryId VARCHAR(40),
+          deletedAt INTEGER,
+          updatedAt INTEGER NOT NULL,
+          createdAt INTEGER NOT NULL
+      );
+  `,
   });
 
-  await promiser("exec", {
-    sql: `insert into transactions_new select * from transactions;`,
-  });
+  db.exec("insert into transactions_new select * from transactions;");
 
-  await promiser("exec", {
-    sql: `drop table transactions;`,
-  });
+  db.exec("drop table transactions;");
 
-  await promiser("exec", {
-    sql: `alter table transactions_new rename to transactions;`,
-  });
+  db.exec("alter table transactions_new rename to transactions;");
 
-  await createMigration(promiser, Migrations.TransactionsCategoriesForeignKey);
+  await createMigration(db, Migrations.TransactionsCategoriesForeignKey);
 };
 
-const findMigration = async (
-  promiser: (..._args: unknown[]) => Promise<unknown>,
-  migration: Migrations
-) => {
-  const result: { id: number }[] = [];
+const findMigration = async (db: OpfsDatabase, migration: Migrations) => {
+  const data = db.selectObjects(
+    `select * from migrations where name = '${migration}'`
+  );
 
-  await promiser("exec", {
-    sql: `select * from migrations where name = '${migration}'`,
-    callback: (res: SelectRow) => utils.mergeSelect(res, result),
-  });
-
-  return result;
+  return data;
 };
 
-const createMigration = async (
-  promiser: (..._args: unknown[]) => Promise<unknown>,
-  migration: Migrations
-) => {
-  await promiser("exec", {
-    sql: `
-              INSERT INTO migrations (name, createdAt) VALUES ('${migration}', ${getUnixTimestamp()});
-          `,
-  });
+const createMigration = async (db: OpfsDatabase, migration: Migrations) => {
+  db.exec(
+    `INSERT INTO migrations (name, createdAt) VALUES ('${migration}', ${getUnixTimestamp()});`
+  );
 };
 
-export const migrate = async (
-  promiser: (..._args: unknown[]) => Promise<unknown>
-) => {
-  await categoriesPubKeyHexMigration(promiser);
-  await transactionsCategoriesForeignKeyMigration(promiser);
+export const migrate = (db: OpfsDatabase) => {
+  categoriesPubKeyHexMigration(db);
+  transactionsCategoriesForeignKeyMigration(db);
 };

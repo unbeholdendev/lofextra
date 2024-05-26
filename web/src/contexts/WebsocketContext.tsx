@@ -1,11 +1,11 @@
-import { handleRemoteDatabaseMutation } from "@/db/db";
+import { handleRemoteDatabaseMutation } from "@/db/utils";
 import {
   useAccountContext,
   useDatabaseContext,
   useHlcContext,
-  useQueryCacheContext,
 } from "@/hooks/contexts";
 import { usePushPendingUpdates } from "@/hooks/usePushPendingUpdates";
+import { useRefetchQueries } from "@/hooks/useRefetchQueries";
 import { getUnixTimestamp } from "@/utils/dates";
 import { xchacha20poly1305 } from "@noble/ciphers/chacha";
 import { bytesToUtf8, hexToBytes } from "@noble/ciphers/utils";
@@ -26,8 +26,8 @@ type Props = {
 
 export const WebsocketProvider = ({ children }: Props) => {
   const { privKey, pubKeyHex, deviceId } = useAccountContext();
-  const { setCacheRefetchDate } = useQueryCacheContext();
-  const { exec } = useDatabaseContext();
+  const refetchQueries = useRefetchQueries();
+  const { db } = useDatabaseContext();
   const { hlc, setHlc } = useHlcContext();
   const pushPendingUpdates = usePushPendingUpdates();
 
@@ -45,7 +45,7 @@ export const WebsocketProvider = ({ children }: Props) => {
     return () => {
       socket.off("connect", pushPendingUpdates);
     };
-  }, [pubKeyHex, exec, deviceId, pushPendingUpdates]);
+  }, [pubKeyHex, db, deviceId, pushPendingUpdates]);
 
   useEffect(() => {
     const onMessages = async (messages: unknown, ack: () => void) => {
@@ -68,7 +68,7 @@ export const WebsocketProvider = ({ children }: Props) => {
         const validatedData = generateDatabaseMutationSchema.parse(data);
 
         await handleRemoteDatabaseMutation({
-          exec,
+          db,
           hlc: messageHlc,
           mutation: validatedData,
         });
@@ -78,7 +78,7 @@ export const WebsocketProvider = ({ children }: Props) => {
 
       ack();
 
-      setCacheRefetchDate(new Date());
+      refetchQueries();
     };
 
     socket.on("messages", onMessages);
@@ -86,7 +86,7 @@ export const WebsocketProvider = ({ children }: Props) => {
     return () => {
       socket.off("messages", onMessages);
     };
-  }, [exec, hlc, setHlc, privKey, setCacheRefetchDate, deviceId]);
+  }, [db, hlc, setHlc, privKey, refetchQueries, deviceId]);
 
   return (
     <WebsocketContext.Provider value={{}}>{children}</WebsocketContext.Provider>

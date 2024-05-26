@@ -1,4 +1,6 @@
-import z from "zod";
+import { OpfsDatabase } from "@sqlite.org/sqlite-wasm";
+import * as comlink from "comlink";
+import { z } from "zod";
 import { HLC } from "../contexts/HlcContext";
 import {
   DatabaseMutationOperation,
@@ -6,63 +8,6 @@ import {
   GenerateDatabaseMutation,
   GenerateDatabaseUpsert,
 } from "../validators/types";
-import { createTables } from "./create";
-import { migrate } from "./migrations";
-import { seed } from "./seeds";
-
-export type SelectRow = {
-  type: string;
-  columnNames: string[];
-  row: string[];
-  rowNumber: number;
-};
-
-const DB_NAME = "mydb.sqlite3";
-
-export const initDatabase = async (
-  sqlite3Worker1Promiser: (...args: unknown[]) => unknown
-) => {
-  const promiser: (..._args: unknown[]) => Promise<unknown> = await new Promise(
-    (resolve) => {
-      const _promiser = sqlite3Worker1Promiser({
-        onready: () => {
-          resolve(_promiser as (..._args: unknown[]) => Promise<unknown>);
-        },
-      });
-    }
-  );
-
-  // @ts-expect-error
-  const { dbId } = await promiser("open", {
-    filename: `file:${DB_NAME}?vfs=opfs`,
-  });
-
-  await createTables(promiser);
-  await seed(promiser);
-  await migrate(promiser);
-
-  const exportDatabase = async () => {
-    // @ts-expect-error
-    const { result } = await promiser("export", { dbId });
-
-    const blob = new Blob([result.byteArray], {
-      type: "application/x-sqlite3",
-    });
-    const a = document.createElement("a");
-    document.body.appendChild(a);
-    a.href = window.URL.createObjectURL(blob);
-    a.download = "lofextra.sqlite3";
-    a.addEventListener("click", function () {
-      setTimeout(function () {
-        window.URL.revokeObjectURL(a.href);
-        a.remove();
-      }, 500);
-    });
-    a.click();
-  };
-
-  return { promiser, exportDatabase };
-};
 
 export const utils = {
   generateUpsert: (
@@ -106,27 +51,14 @@ export const utils = {
 
     return sql;
   },
-  mergeSelect: <T>({ row, columnNames }: SelectRow, result: T[]) => {
-    if (!row) {
-      return;
-    }
-
-    const data = row.reduce((acc, row, i) => {
-      acc[columnNames[i] as keyof T] = row as T[keyof T];
-
-      return acc;
-    }, {} as T);
-
-    result.push(data);
-  },
 };
 
 export const handleRemoteDatabaseMutation = async ({
-  exec,
+  db,
   hlc,
   mutation,
 }: {
-  exec: (sql: string) => Promise<Record<string, unknown>[]>;
+  db: comlink.Remote<OpfsDatabase>;
   hlc: HLC;
   mutation: GenerateDatabaseMutation;
 }) => {
@@ -136,7 +68,7 @@ export const handleRemoteDatabaseMutation = async ({
       ? mutation.columnDataMap[identifierColumn]
       : mutation.identifierValue;
 
-  const record = await exec(
+  const record = await db.selectObjects(
     `select * from ${mutation.tableName} where ${identifierColumn} = '${identifierValue}'`
   );
 
@@ -147,9 +79,11 @@ export const handleRemoteDatabaseMutation = async ({
     return;
   }
 
-  await exec(
+  const sql =
     mutation.operation === DatabaseMutationOperation.Upsert
       ? utils.generateUpsert(mutation, hlc)
-      : utils.generateDelete(mutation, hlc)
-  );
+      : utils.generateDelete(mutation, hlc);
+
+  // @ts-expect-error
+  await db.exec(sql);
 };

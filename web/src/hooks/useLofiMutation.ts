@@ -1,5 +1,5 @@
 import { HLC } from "@/contexts/HlcContext";
-import { utils } from "@/db/db";
+import { utils } from "@/db/utils";
 import { socket } from "@/io";
 import { getUnixTimestamp } from "@/utils/dates";
 import { inc, serialize } from "@/utils/hlc";
@@ -9,42 +9,29 @@ import {
   Message,
 } from "@/validators/types";
 import { xchacha20poly1305 } from "@noble/ciphers/chacha";
-import { bytesToHex, utf8ToBytes } from "@noble/ciphers/utils";
 import { sha256 } from "@noble/hashes/sha256";
+import { bytesToHex, utf8ToBytes } from "@noble/hashes/utils";
+import { UseMutationOptions, useMutation } from "@tanstack/react-query";
 import { randomBytes } from "crypto";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import {
   useAccountContext,
   useDatabaseContext,
   useHlcContext,
-  useQueryCacheContext,
 } from "./contexts";
 
-type MutationOptions = {
-  onSettled: () => void;
-  shouldSync?: boolean;
-  refetchAll?: boolean;
-};
+type Params = Omit<
+  UseMutationOptions<unknown, Error, GenerateDatabaseMutation, unknown>,
+  "mutationFn"
+> & { shouldSync: boolean };
 
-export const useMutation = (options?: MutationOptions) => {
-  const { exec } = useDatabaseContext();
-  const { setCache, setCacheRefetchDate } = useQueryCacheContext();
-  const [isLoading, setIsLoading] = useState(false);
+export const useLofiMutation = ({ shouldSync, ...options }: Params) => {
+  const { db } = useDatabaseContext();
   const { hlc, setHlc } = useHlcContext();
   const { sync } = useServerSync();
 
-  const { shouldSync, refetchAll } = useMemo(
-    () => ({
-      shouldSync: options?.shouldSync ?? true,
-      refetchAll: options?.refetchAll ?? false,
-    }),
-    [options]
-  );
-
   const mutate = useCallback(
     async (mutation: GenerateDatabaseMutation) => {
-      setIsLoading(true);
-
       const updatedHlc = inc(hlc, getUnixTimestamp());
 
       setHlc(updatedHlc);
@@ -54,45 +41,22 @@ export const useMutation = (options?: MutationOptions) => {
           ? utils.generateUpsert(mutation, updatedHlc)
           : utils.generateDelete(mutation, updatedHlc);
 
-      await exec(sql);
-
-      setIsLoading(false);
-      options?.onSettled();
+      // @ts-expect-error
+      await db.exec(sql);
 
       if (shouldSync) {
         sync(mutation, updatedHlc);
       }
-
-      if (refetchAll) {
-        setCache({});
-        setCacheRefetchDate(new Date());
-      }
     },
-    [
-      shouldSync,
-      refetchAll,
-      exec,
-      options,
-      sync,
-      hlc,
-      setHlc,
-      setCache,
-      setCacheRefetchDate,
-    ]
+    [db, hlc, setHlc, shouldSync, sync]
   );
 
-  return useMemo(
-    () => ({
-      mutate,
-      isLoading,
-    }),
-    [mutate, isLoading]
-  );
+  return useMutation({ ...options, mutationFn: mutate });
 };
 
 const useServerSync = () => {
   const { privKey, pubKeyHex } = useAccountContext();
-  const { exec } = useDatabaseContext();
+  const { db } = useDatabaseContext();
 
   const sync = useCallback(
     async (mutation: GenerateDatabaseMutation, hlc: HLC) => {
@@ -116,22 +80,23 @@ const useServerSync = () => {
       } catch (err) {
         console.error(err);
 
-        await exec(
-          utils.generateUpsert(
-            {
-              operation: DatabaseMutationOperation.Upsert,
-              tableName: "pendingUpdates",
-              columnDataMap: {
-                message: JSON.stringify(message),
-                createdAt: getUnixTimestamp(),
-              },
+        const sql = utils.generateUpsert(
+          {
+            operation: DatabaseMutationOperation.Upsert,
+            tableName: "pendingUpdates",
+            columnDataMap: {
+              message: JSON.stringify(message),
+              createdAt: getUnixTimestamp(),
             },
-            hlc
-          )
+          },
+          hlc
         );
+
+        // @ts-expect-error
+        await db.exec(sql);
       }
     },
-    [privKey, pubKeyHex, exec]
+    [privKey, pubKeyHex, db]
   );
 
   return useMemo(() => ({ sync }), [sync]);

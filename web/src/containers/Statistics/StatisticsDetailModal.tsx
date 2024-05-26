@@ -1,6 +1,7 @@
 import { Modal } from "@/components/Modal";
 import { useAccountContext } from "@/hooks/contexts";
-import { useQuery } from "@/hooks/useQuery";
+import { useLofiQuery } from "@/hooks/useLofiQuery";
+import { QueryKeys } from "@/queries";
 import { getDateFromTimestamp } from "@/utils/dates";
 import { formatNumber } from "@/utils/formatters";
 import { transactionsSchema } from "@/validators/validators";
@@ -33,11 +34,16 @@ export const StatisticsDetailModal = ({
   const categoryCondition =
     categoryId === "-1" ? "categoryId is null" : `categoryId = '${categoryId}'`;
 
-  const { data } = useQuery(
-    `select * from transactions t where pubKeyHex = '${pubKeyHex}' and ${categoryCondition} and deletedAt is null and ${intervalCondition} order by createdAt desc`,
-    transactionsSchema,
-    { refetchOnRemoteUpdate: true }
-  );
+  const { data } = useLofiQuery({
+    sql: `select * from transactions t where pubKeyHex = '${pubKeyHex}' and ${categoryCondition} and deletedAt is null and ${intervalCondition} order by createdAt desc`,
+    schema: transactionsSchema,
+    queryKey: [
+      QueryKeys.GET_STATISTICS_TRANSACTIONS_IN_CATEGORY,
+      pubKeyHex,
+      categoryCondition,
+      intervalCondition,
+    ],
+  });
 
   return (
     <>

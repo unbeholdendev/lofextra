@@ -4,10 +4,10 @@ import { z } from "zod";
 import { useDatabaseContext } from "./contexts";
 
 export const usePushPendingUpdates = () => {
-  const { exec } = useDatabaseContext();
+  const { db } = useDatabaseContext();
 
   return useCallback(async () => {
-    const pendingUpdates = await exec(
+    const pendingUpdates = await db.selectObjects(
       "select * from pendingUpdates order by id"
     );
 
@@ -24,10 +24,11 @@ export const usePushPendingUpdates = () => {
       );
 
       for (const update of pendingUpdates) {
-        await exec(`delete from pendingUpdates where id = ${update.id}`);
+        // @ts-expect-error
+        await db.exec(`delete from pendingUpdates where id = ${update.id}`);
       }
     } catch (err) {
       console.error(err);
     }
-  }, [exec]);
+  }, [db]);
 };

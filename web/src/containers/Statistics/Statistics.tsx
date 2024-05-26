@@ -1,5 +1,6 @@
 import { useAccountContext } from "@/hooks/contexts";
-import { useQuery } from "@/hooks/useQuery";
+import { useLofiQuery } from "@/hooks/useLofiQuery";
+import { QueryKeys } from "@/queries";
 import {
   getEndOfDay,
   getEndOfMonth,
@@ -36,11 +37,7 @@ export const Statistics = () => {
   const [rangeStart, setRangeStart] = useState(currentDateFormatted);
   const [rangeEnd, setRangeEnd] = useState(currentDateFormatted);
 
-  const [detailCategory, setDetailCategory] = useState<{
-    categoryId: string;
-    categoryTitle: string;
-    categoryTotal: number;
-  } | null>(null);
+  const [detailCategoryId, setDetailCategoryId] = useState<string | null>(null);
 
   const intervalCondition = useMemo(() => {
     if (statsInterval === MONTH) {
@@ -62,21 +59,26 @@ export const Statistics = () => {
     return `t.createdAt > ${statsInterval}`;
   }, [statsInterval, monthInterval, rangeStart, rangeEnd]);
 
-  const { data } = useQuery(
-    `select sum(amount) as categoryTotal, coalesce(c.title, '<no category>') AS categoryTitle, coalesce(c.id, '-1') AS categoryId from transactions t left join categories c on c.id = t.categoryId and c.deletedAt is null where t.pubKeyHex = '${pubKeyHex}' and t.deletedAt is null and ${intervalCondition} group by categoryId order by categoryTotal desc`,
-    z.array(
+  const { data } = useLofiQuery({
+    sql: `select sum(amount) as categoryTotal, coalesce(c.title, '<no category>') AS categoryTitle, coalesce(c.id, '-1') AS categoryId from transactions t left join categories c on c.id = t.categoryId and c.deletedAt is null where t.pubKeyHex = '${pubKeyHex}' and t.deletedAt is null and ${intervalCondition} group by categoryId order by categoryTotal desc`,
+    schema: z.array(
       z.object({
         categoryTotal: z.number(),
         categoryTitle: z.string(),
         categoryId: z.string(),
       })
     ),
-    { refetchOnRemoteUpdate: true }
-  );
+    queryKey: [QueryKeys.GET_STATISTICS, pubKeyHex, intervalCondition],
+  });
 
   const totalInPeriod = useMemo(
     () => data?.reduce((acc, curr) => acc + curr.categoryTotal, 0) ?? 0,
     [data]
+  );
+
+  const detailCategory = useMemo(
+    () => data?.find((c) => c.categoryId === detailCategoryId),
+    [data, detailCategoryId]
   );
 
   return (
@@ -154,13 +156,7 @@ export const Statistics = () => {
           <p
             key={categoryId}
             className={styles["statistics-row"]}
-            onClick={() =>
-              setDetailCategory({
-                categoryId,
-                categoryTitle,
-                categoryTotal,
-              })
-            }
+            onClick={() => setDetailCategoryId(categoryId)}
           >
             {categoryTitle}: <strong>{formatNumber(categoryTotal)}</strong>{" "}
             <span className={styles.small}>
@@ -181,7 +177,7 @@ export const Statistics = () => {
           categoryTitle={detailCategory.categoryTitle}
           categoryTotal={detailCategory.categoryTotal}
           intervalCondition={intervalCondition}
-          onClose={() => setDetailCategory(null)}
+          onClose={() => setDetailCategoryId(null)}
         />
       )}
     </>

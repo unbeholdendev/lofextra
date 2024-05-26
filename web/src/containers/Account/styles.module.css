@@ -10,3 +10,7 @@
 .copy {
   cursor: pointer;
 }
+
+.margin-top {
+  margin-top: 1rem;
+}

@@ -1,5 +1,6 @@
 import { useAccountContext } from "@/hooks/contexts";
-import { useQuery } from "@/hooks/useQuery";
+import { useLofiQuery } from "@/hooks/useLofiQuery";
+import { QueryKeys } from "@/queries";
 import { categoriesSchema } from "@/validators/validators";
 import { useState } from "react";
 import { Category } from "./Category";
@@ -12,13 +13,11 @@ export const Categories = () => {
     null
   );
 
-  const { data, refetch } = useQuery(
-    `select * from categories where pubKeyHex = '${pubKeyHex}' and deletedAt is null`,
-    categoriesSchema,
-    { refetchOnRemoteUpdate: true }
-  );
-
-  console.log(data);
+  const { data, refetch } = useLofiQuery({
+    sql: `select * from categories where pubKeyHex = '${pubKeyHex}' and deletedAt is null`,
+    schema: categoriesSchema,
+    queryKey: [QueryKeys.GET_CATEGORIES, pubKeyHex],
+  });
 
   return (
     <>

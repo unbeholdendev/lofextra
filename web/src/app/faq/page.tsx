@@ -50,8 +50,7 @@ export default function Page() {
         </div>
         <div className={styles.small}>
           *the data is stored on your device therefore it is possible to recover
-          it, however advanced knowledge is required. lofextra aims to improve
-          the UX in this regard by allowing you to export/import
+          it by making the backup using the export database functionality
         </div>
 
         <div className={styles.question}>can i use the app offline</div>

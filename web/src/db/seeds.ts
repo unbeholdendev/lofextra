@@ -1,23 +1,18 @@
 import { generateNewAccountKeyPair } from "@/utils/account";
-import { SelectRow, utils } from "./db";
+import { OpfsDatabase } from "@sqlite.org/sqlite-wasm";
 
-export const getCurrentAccountPubKey = async (
-  promiser: (..._args: unknown[]) => Promise<unknown>
-): Promise<string | undefined> => {
-  const result: { pubKey: string }[] = [];
+export const getCurrentAccountPubKey = (
+  db: OpfsDatabase
+): string | undefined => {
+  const data = db.selectObjects(
+    "select * from accounts order by id desc limit 1"
+  );
 
-  await promiser("exec", {
-    sql: "select * from accounts order by id desc limit 1",
-    callback: (res: SelectRow) => utils.mergeSelect(res, result),
-  });
-
-  return result[0]?.pubKey;
+  return data[0]?.pubKey as string | undefined;
 };
 
-const seedAccount = async (
-  promiser: (..._args: unknown[]) => Promise<unknown>
-) => {
-  const currentPubKey = await getCurrentAccountPubKey(promiser);
+const seedAccount = (db: OpfsDatabase) => {
+  const currentPubKey = getCurrentAccountPubKey(db);
 
   if (currentPubKey) {
     return;
@@ -25,31 +20,22 @@ const seedAccount = async (
 
   const { privKey, pubKey } = generateNewAccountKeyPair();
 
-  await promiser("exec", {
-    sql: `insert into accounts (privKey, pubKey, createdAt, updatedAt) values ('${privKey}', '${pubKey}', strftime('%s', 'now')*1000, strftime('%s', 'now')*1000)`,
-  });
+  db.exec(
+    `insert into accounts (privKey, pubKey, createdAt, updatedAt) values ('${privKey}', '${pubKey}', strftime('%s', 'now')*1000, strftime('%s', 'now')*1000)`
+  );
 };
 
-const seedDevice = async (
-  promiser: (..._args: unknown[]) => Promise<unknown>
-) => {
-  const result: { id: number }[] = [];
+const seedDevice = (db: OpfsDatabase) => {
+  const data = db.selectObjects("select * from device");
 
-  await promiser("exec", {
-    sql: "select * from device",
-    callback: (res: SelectRow) => utils.mergeSelect(res, result),
-  });
-
-  if (!result[0]) {
-    await promiser("exec", {
-      sql: `insert into device (id, createdAt) values ('${crypto.randomUUID()}', strftime('%s', 'now')*1000)`,
-    });
+  if (!data[0]) {
+    db.exec(
+      `insert into device (id, createdAt) values ('${crypto.randomUUID()}', strftime('%s', 'now')*1000)`
+    );
   }
 };
 
-export const seed = async (
-  promiser: (..._args: unknown[]) => Promise<unknown>
-) => {
-  await seedDevice(promiser);
-  await seedAccount(promiser);
+export const seed = (db: OpfsDatabase) => {
+  seedDevice(db);
+  seedAccount(db);
 };

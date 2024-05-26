@@ -1,16 +1,18 @@
 import styles from "@/app/dashboard/styles.module.css";
-import { SelectRow, initDatabase, utils } from "@/db/db";
-import {
-  ReactNode,
-  createContext,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { DB_NAME } from "@/constants";
+import { OpfsDatabase, Sqlite3Static } from "@sqlite.org/sqlite-wasm";
+import * as comlink from "comlink";
+import { ReactNode, createContext, useEffect, useState } from "react";
 
 type DatabaseContext = {
-  exec: <T extends Record<string, unknown>>(sql: string) => Promise<T[]>;
-  exportDatabase: () => Promise<unknown>;
+  db: comlink.Remote<OpfsDatabase>;
+  exportDatabase: () => Promise<void>;
+  importDatabase: (byteArray: ArrayBuffer) => Promise<void>;
+};
+
+type WorkerApi = {
+  db: comlink.Remote<OpfsDatabase>;
+  sqlite3: comlink.Remote<Sqlite3Static>;
 };
 
 export const DatabaseContext = createContext({} as DatabaseContext);
@@ -20,42 +22,65 @@ type Props = {
 };
 
 export const DatabaseProvider = ({ children }: Props) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [{ promiser, exportDatabase }, setPromiser] = useState({
-    promiser: (..._args: unknown[]) => new Promise(() => {}),
-    exportDatabase: () => new Promise(() => {}),
-  });
+  const [dbLoading, setDbLoading] = useState(true);
+  const [workerApi, setWorkerApi] = useState<WorkerApi>();
 
   useEffect(() => {
-    import("@sqlite.org/sqlite-wasm").then(
-      // @ts-ignore
-      ({ sqlite3Worker1Promiser }) => {
-        initDatabase(sqlite3Worker1Promiser).then(
-          ({ promiser: _promiser, exportDatabase }) => {
-            setPromiser({ promiser: _promiser, exportDatabase });
-            setIsLoading(false);
-          }
-        );
+    const worker = new Worker(new URL("../db/worker.ts", import.meta.url), {
+      type: "module",
+    });
+
+    worker.onmessage = (ev) => {
+      if (ev.data.type === "dbReady") {
+        worker.onmessage = null;
+
+        const workerApi = comlink.wrap(worker);
+
+        setDbLoading(false);
+        setWorkerApi(() => workerApi as unknown as WorkerApi);
       }
-    );
+    };
   }, []);
 
-  const exec = useCallback(
-    async <T extends Record<string, unknown>>(sql: string) => {
-      const result: T[] = [];
+  const exportDatabase = async () => {
+    // @ts-expect-error
+    const byteArray = await workerApi.sqlite3.capi.sqlite3_js_db_export(
+      await workerApi?.db.pointer
+    );
 
-      await promiser("exec", {
-        sql,
-        callback: (res: SelectRow) => utils.mergeSelect<T>(res, result),
-      });
+    const blob = new Blob([byteArray.buffer], {
+      type: "application/x-sqlite3",
+    });
+    const a = document.createElement("a");
+    document.body.appendChild(a);
+    a.href = window.URL.createObjectURL(blob);
+    a.download = "lofextra.sqlite3";
+    a.addEventListener("click", function () {
+      setTimeout(function () {
+        window.URL.revokeObjectURL(a.href);
+        a.remove();
+      }, 500);
+    });
+    a.click();
+  };
 
-      return result;
-    },
-    [promiser]
-  );
+  const importDatabase = async (byteArray: ArrayBuffer) => {
+    // @ts-expect-error
+    await workerApi.sqlite3.oo1.OpfsDb.importDb(DB_NAME, byteArray);
+
+    // @ts-expect-error
+    await workerApi.db.exec("delete from device");
+
+    // @ts-expect-error
+    await workerApi.db.exec(
+      // @ts-expect-error
+      `insert into device (id, createdAt) values ('${crypto.randomUUID()}', strftime('%s', 'now')*1000)`
+    );
+  };
 
   // this is a better approach for exporting the database
-  // but unfortunately not supported in some major browsers yet (mozilla)
+  // but unfortunately not supported in some major browsers yet
+  // https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker#browser_compatibility
 
   // const exportDatabase = async () => {
   //   const opfsRoot = await navigator.storage.getDirectory();
@@ -78,9 +103,15 @@ export const DatabaseProvider = ({ children }: Props) => {
   // };
 
   return (
-    <DatabaseContext.Provider value={{ exec, exportDatabase }}>
+    <DatabaseContext.Provider
+      value={{
+        db: workerApi?.db as comlink.Remote<OpfsDatabase>,
+        exportDatabase,
+        importDatabase,
+      }}
+    >
       <main className={styles.main}>
-        {isLoading ? <div aria-busy="true" /> : children}
+        {dbLoading ? <div aria-busy="true" /> : children}
       </main>
     </DatabaseContext.Provider>
   );
