@@ -46,7 +46,7 @@ I never really needed it, but if there's a demand..
 
 Initially, lofextra was built without from the ground up without any library for building local-first apps. In the future, me or someone else might make use of the tooling that lofextra used to use.
 
-Therefore, some effort went into extracking the lofextra's underlying logic and turning it into its own library. Currently, lofextra is using [lofik]("https://github.com/pycan-jouza/lofik"). Lofextra's source code got hugely simplified.
+Therefore, some effort went into extracking the lofextra's underlying logic and turning it into its own library. Currently, lofextra is using [lofik](https://github.com/pycan-jouza/lofik). Lofextra's source code got hugely simplified.
 
 ### ORM
 
