@@ -42,9 +42,11 @@ Saves you time so that you don't have to input transactions that happen on regul
 
 I never really needed it, but if there's a demand..
 
-#### NPM package
+#### Extract lofextra's tooling [DONE]
 
-Extracting the underlying stuff that can be used for building other types of apps into NPM package. Stuff like mnemonic, sync logic, encryption/decryption.
+Initially, lofextra was built without from the ground up without any library for building local-first apps. In the future, me or someone else might make use of the tooling that lofextra used to use.
+
+Therefore, some effort went into extracking the lofextra's underlying logic and turning it into its own library. Currently, lofextra is using (lofik)["https://github.com/pycan-jouza/lofik"]. Lofextra's source code got hugely simplified.
 
 ### ORM
 
