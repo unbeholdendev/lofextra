@@ -54,13 +54,6 @@ export const CategoryFormModal = ({ category, onSuccess, onClose }: Props) => {
     });
   };
 
-  const onDelete = async () =>
-    mutate({
-      operation: DatabaseMutationOperation.Delete,
-      tableName: "categories",
-      identifierValue: category.id as string,
-    });
-
   return (
     <Modal
       onClose={onClose}
@@ -82,16 +75,6 @@ export const CategoryFormModal = ({ category, onSuccess, onClose }: Props) => {
         </fieldset>
 
         <div className={styles["flex-container"]}>
-          {category.id && (
-            <button
-              type="button"
-              className={`contrast ${styles.flex}`}
-              onClick={onDelete}
-            >
-              delete
-            </button>
-          )}
-
           <button className={styles.flex} type="submit">
             {category.id ? "save" : "add"}
           </button>

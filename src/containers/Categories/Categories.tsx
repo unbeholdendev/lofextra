@@ -41,6 +41,7 @@ export const Categories = () => {
               key={category.id}
               category={category}
               onDetailClick={(category) => setModalCategory(category)}
+              onDelete={refetch}
             />
           ))
         ) : (

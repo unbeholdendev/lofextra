@@ -8,6 +8,7 @@
   margin-bottom: 0.5rem;
   padding: 0.5rem;
   border-radius: 5px;
+  justify-content: space-between;
 }
 
 .category-row:hover {
