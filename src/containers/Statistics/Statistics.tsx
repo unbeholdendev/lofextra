@@ -148,7 +148,7 @@ export const Statistics = () => {
 
       <div className={styles.scroll}>
         <p className={styles.large}>
-          Total in period: <strong>{formatNumber(totalInPeriod)}</strong>
+          total in period: <strong>{formatNumber(totalInPeriod)}</strong>
         </p>
 
         {data?.map(({ categoryTotal, categoryTitle, categoryId }) => (
