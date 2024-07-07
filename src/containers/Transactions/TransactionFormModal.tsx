@@ -129,7 +129,7 @@ export const TransactionFormModal = ({ transaction, onClose }: Props) => {
               name="amount"
               placeholder="5+5"
               aria-label="amount"
-              inputMode="numeric"
+              inputMode="tel"
             />
           </div>
         </fieldset>
