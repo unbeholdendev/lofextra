@@ -1,8 +1,8 @@
 import { Category as CategoryType } from "@/validators/types";
-import styles from "./styles.module.css";
 import { DatabaseMutationOperation, useLofikMutation } from "@lofik/react";
 import { useState } from "react";
 import { ConfirmModal } from "../../components/ConfirmModal";
+import styles from "./styles.module.css";
 
 type Props = {
   category: CategoryType;
@@ -11,24 +11,22 @@ type Props = {
 };
 
 export const Category = ({ category, onDetailClick, onDelete }: Props) => {
-  const [confirm, setOpenConfirm] = useState<boolean>(false);
+  const [confirm, setOpenConfirm] = useState(false);
 
   const { mutate } = useLofikMutation({
     shouldSync: true,
-    onSuccess: () => {},
+    onSuccess: () => {
+      setOpenConfirm(false);
+      onDelete();
+    },
   });
 
-  const handleDelete = async () => {
-    // Todo: solve why VSCode says its not needed, but in fact its very needed!
-    await mutate({
+  const handleDelete = () =>
+    mutate({
       operation: DatabaseMutationOperation.Delete,
       tableName: "categories",
       identifierValue: category.id as string,
     });
-
-    setOpenConfirm(false);
-    onDelete();
-  };
 
   return (
     <>
@@ -46,10 +44,12 @@ export const Category = ({ category, onDetailClick, onDelete }: Props) => {
           🗑️
         </div>
       </div>
+
       {confirm && (
         <ConfirmModal
           onCancel={() => setOpenConfirm(false)}
           onConfirm={handleDelete}
+          header="Are you sure to delete the category?"
         />
       )}
     </>

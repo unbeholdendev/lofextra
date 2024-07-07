@@ -4,10 +4,14 @@ import styles from "./styles.module.css";
 type Props = {
   onConfirm: () => void;
   onCancel: () => void;
+  header?: string;
 };
 
-export const ConfirmModal = ({ onCancel, onConfirm }: Props) => (
-  <Modal onClose={onCancel} header={<strong>Are you sure?</strong>}>
+export const ConfirmModal = ({ onCancel, onConfirm, header }: Props) => (
+  <Modal
+    onClose={onCancel}
+    header={<strong>{header || "Are you sure?"}</strong>}
+  >
     <div className={styles["flex-container"]}>
       <button className={`contrast ${styles.flex}`} onClick={onCancel}>
         No

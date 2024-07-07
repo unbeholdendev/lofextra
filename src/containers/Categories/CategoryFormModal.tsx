@@ -58,9 +58,7 @@ export const CategoryFormModal = ({ category, onSuccess, onClose }: Props) => {
     <Modal
       onClose={onClose}
       header={
-        <strong>
-          {category.id ? "update or delete category" : "add category"}
-        </strong>
+        <strong>{category.id ? "update category" : "add category"}</strong>
       }
     >
       <Form<FormValues>
