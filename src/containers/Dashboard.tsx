@@ -20,13 +20,27 @@ export const Dashboard = () => {
     useState<ModalTransaction | null>(null);
 
   const { data: totalData } = useLofikQuery({
-    sql: `select sum(amount) as total from transactions where pubKeyHex = '${pubKeyHex}' and deletedAt is null and createdAt > ${DAYS_AGO_30_TS}`,
+    sql: `
+      SELECT 
+        SUM(amount) AS total 
+      FROM transactions 
+      WHERE 
+        pubKeyHex = '${pubKeyHex}' 
+        AND deletedAt IS NULL 
+        AND createdAt > ${DAYS_AGO_30_TS}
+    `,
     schema: z.array(z.object({ total: z.number().nullable() })),
     queryKey: [QueryKeys.GET_TRANSACTIONS_TOTAL, pubKeyHex],
   });
 
   const { data: transactions } = useLofikQuery({
-    sql: `select * from transactions where pubKeyHex = '${pubKeyHex}' and deletedAt is null and createdAt > ${DAYS_AGO_30_TS} order by createdAt desc`,
+    sql: `
+      SELECT * FROM transactions 
+      WHERE 
+        pubKeyHex = '${pubKeyHex}' 
+        AND deletedAt IS NULL 
+        AND createdAt > ${DAYS_AGO_30_TS} 
+      ORDER BY createdAt desc`,
     schema: transactionsSchema,
     queryKey: [QueryKeys.GET_TRANSACTIONS, pubKeyHex],
   });

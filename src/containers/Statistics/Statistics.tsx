@@ -44,13 +44,13 @@ export const Statistics = () => {
 
       return `t.createdAt > ${getStartOfMonth(
         monthDate
-      ).getTime()} and t.createdAt < ${getEndOfMonth(monthDate).getTime()}`;
+      ).getTime()} AND t.createdAt < ${getEndOfMonth(monthDate).getTime()}`;
     }
 
     if (statsInterval === RANGE) {
       return `t.createdAt > ${new Date(
         rangeStart
-      ).getTime()} and t.createdAt < ${getEndOfDay(
+      ).getTime()} AND t.createdAt < ${getEndOfDay(
         new Date(rangeEnd)
       ).getTime()}`;
     }
@@ -59,7 +59,21 @@ export const Statistics = () => {
   }, [statsInterval, monthInterval, rangeStart, rangeEnd]);
 
   const { data } = useLofikQuery({
-    sql: `select sum(amount) as categoryTotal, coalesce(c.title, '<no category>') AS categoryTitle, coalesce(c.id, '-1') AS categoryId from transactions t left join categories c on c.id = t.categoryId and c.deletedAt is null where t.pubKeyHex = '${pubKeyHex}' and t.deletedAt is null and ${intervalCondition} group by categoryId order by categoryTotal desc`,
+    sql: `
+        SELECT 
+          SUM(amount) AS categoryTotal, 
+          COALESCE(c.title, '<no category>') AS categoryTitle, 
+          COALESCE(c.id, '-1') AS categoryId 
+        FROM transactions t 
+        LEFT JOIN 
+          categories c ON c.id = t.categoryId AND c.deletedAt IS NULL 
+        WHERE 
+          t.pubKeyHex = '${pubKeyHex}' 
+          AND t.deletedAt IS NULL 
+          AND ${intervalCondition} 
+        GROUP BY categoryId 
+        ORDER BY categoryTotal DESC
+    `,
     schema: z.array(
       z.object({
         categoryTotal: z.number(),

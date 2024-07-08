@@ -14,7 +14,11 @@ export const Categories = () => {
   );
 
   const { data, refetch } = useLofikQuery({
-    sql: `select * from categories where pubKeyHex = '${pubKeyHex}' and deletedAt is null`,
+    sql: `
+      SELECT * FROM categories 
+      WHERE 
+        pubKeyHex = '${pubKeyHex}' 
+        AND deletedAt IS NULL`,
     schema: categoriesSchema,
     queryKey: [QueryKeys.GET_CATEGORIES, pubKeyHex],
   });

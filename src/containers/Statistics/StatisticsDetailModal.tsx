@@ -31,10 +31,22 @@ export const StatisticsDetailModal = ({
     useState<ModalTransaction | null>(null);
 
   const categoryCondition =
-    categoryId === "-1" ? "categoryId is null" : `categoryId = '${categoryId}'`;
+    categoryId === "-1" ? "c.id IS NULL" : `t.categoryId = '${categoryId}'`;
 
   const { data } = useLofikQuery({
-    sql: `select * from transactions t where pubKeyHex = '${pubKeyHex}' and ${categoryCondition} and deletedAt is null and ${intervalCondition} order by createdAt desc`,
+    sql: `
+      SELECT
+        t.*
+      FROM transactions t 
+      LEFT JOIN 
+        categories c ON c.id = t.categoryId AND c.deletedAt IS NULL 
+      WHERE 
+        t.pubKeyHex = '${pubKeyHex}' 
+        AND ${categoryCondition} 
+        AND t.deletedAt IS NULL
+        AND ${intervalCondition} 
+      ORDER BY t.createdAt DESC
+    `,
     schema: transactionsSchema,
     queryKey: [
       QueryKeys.GET_STATISTICS_TRANSACTIONS_IN_CATEGORY,
