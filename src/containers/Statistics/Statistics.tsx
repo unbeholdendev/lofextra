@@ -213,6 +213,7 @@ export const Statistics = () => {
           categoryTitle={detailCategory.categoryTitle}
           categoryTotal={detailCategory.categoryTotal}
           intervalCondition={intervalCondition}
+          search={debouncedSearch}
           onClose={() => setDetailCategoryId(null)}
         />
       )}

@@ -16,6 +16,7 @@ type Props = {
   categoryId: string;
   categoryTotal: number;
   intervalCondition: string;
+  search: string;
   onClose: () => void;
 };
 
@@ -24,6 +25,7 @@ export const StatisticsDetailModal = ({
   categoryId,
   categoryTotal,
   intervalCondition,
+  search,
   onClose,
 }: Props) => {
   const { pubKeyHex } = useLofikAccount();
@@ -45,6 +47,7 @@ export const StatisticsDetailModal = ({
         AND ${categoryCondition} 
         AND t.deletedAt IS NULL
         AND ${intervalCondition} 
+        ${search ? `AND LOWER(t.title) LIKE '%${search.toLowerCase()}%'` : ""}
       ORDER BY t.createdAt DESC
     `,
     schema: transactionsSchema,
@@ -53,6 +56,7 @@ export const StatisticsDetailModal = ({
       pubKeyHex,
       categoryCondition,
       intervalCondition,
+      search,
     ],
   });
 
