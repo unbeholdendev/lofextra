@@ -176,7 +176,7 @@ export const Statistics = () => {
 
       <div>
         <input
-          type="text"
+          type="search"
           placeholder="type to search in transaction title.."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
