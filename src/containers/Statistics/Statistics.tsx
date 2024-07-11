@@ -1,3 +1,4 @@
+import { useDebounce } from "@/hooks/useDebounce";
 import { QueryKeys } from "@/queries";
 import {
   getEndOfDay,
@@ -35,8 +36,11 @@ export const Statistics = () => {
   );
   const [rangeStart, setRangeStart] = useState(currentDateFormatted);
   const [rangeEnd, setRangeEnd] = useState(currentDateFormatted);
+  const [search, setSearch] = useState("");
 
   const [detailCategoryId, setDetailCategoryId] = useState<string | null>(null);
+
+  const debouncedSearch = useDebounce(search, 300);
 
   const intervalCondition = useMemo(() => {
     if (statsInterval === MONTH) {
@@ -71,6 +75,11 @@ export const Statistics = () => {
           t.pubKeyHex = '${pubKeyHex}' 
           AND t.deletedAt IS NULL 
           AND ${intervalCondition} 
+          ${
+            debouncedSearch
+              ? `AND LOWER(t.title) LIKE '%${debouncedSearch.toLowerCase()}%'`
+              : ""
+          }
         GROUP BY categoryId 
         ORDER BY categoryTotal DESC
     `,
@@ -81,7 +90,12 @@ export const Statistics = () => {
         categoryId: z.string(),
       })
     ),
-    queryKey: [QueryKeys.GET_STATISTICS, pubKeyHex, intervalCondition],
+    queryKey: [
+      QueryKeys.GET_STATISTICS,
+      pubKeyHex,
+      intervalCondition,
+      debouncedSearch,
+    ],
   });
 
   const totalInPeriod = useMemo(
@@ -158,6 +172,15 @@ export const Statistics = () => {
             onChange={(e) => setRangeEnd(e.target.value)}
           />
         )}
+      </div>
+
+      <div>
+        <input
+          type="text"
+          placeholder="type to search in transaction title.."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </div>
 
       <div className={styles.scroll}>
