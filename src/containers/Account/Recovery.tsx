@@ -1,13 +1,11 @@
 import { getUnixTimestamp } from "@/utils/dates";
 import {
+  DatabaseMutationOperation,
+  GenerateDatabaseMutation,
   useLofikAccount,
   useLofikDatabase,
   useLofikMutation,
 } from "@lofik/react";
-import {
-  DatabaseMutationOperation,
-  GenerateDatabaseMutation,
-} from "@lofik/react/dist/types";
 import { ChangeEvent, useRef, useState } from "react";
 import styles from "./styles.module.css";
 
