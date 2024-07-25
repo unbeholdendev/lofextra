@@ -1,7 +1,7 @@
-import { QueryKeys } from "@/queries";
-import { categoriesSchema } from "@/validators/validators";
 import { useLofikAccount, useLofikQuery } from "@lofik/react";
 import { useFormContext } from "react-hook-form";
+import { QueryKeys } from "../queries";
+import { categoriesSchema } from "../validators/validators";
 
 type Props = {
   name: string;

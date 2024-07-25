@@ -1,4 +1,4 @@
-import { Modal } from "@/components/Modal";
+import { Modal } from "./Modal";
 import styles from "./styles.module.css";
 
 type Props = {

@@ -1,0 +1,85 @@
+---
+import { ViewTransitions } from "astro:transitions";
+import "../pico.pumpkin.min.css";
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+
+const name = "lofextra";
+const description = "local-first expense tracker";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="application-name" content={name} />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content={name} />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content={name} />
+    <meta property="og:type" content="website" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={name} />
+    <meta name="twitter:description" content={description} />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="75x75" />
+
+    <link
+      rel="preload"
+      href="https://plausible.lofextra.com/js/script.js"
+      as="script"
+    />
+
+    <ViewTransitions />
+  </head>
+
+  <body>
+    <slot />
+
+    <footer>
+      <a href="/dashboard">app</a>
+
+      <a href="/faq">faq</a>
+
+      <a
+        href="https://github.com/pycan-jouza/lofextra"
+        target="_blank"
+        referrerpolicy="no-referrer"
+      >
+        source code
+      </a>
+
+      <a href="/donate">donate</a>
+    </footer>
+    <style>
+      body {
+        padding: 0 1rem;
+        margin: 0 auto;
+        max-width: 800px;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      footer {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+      }
+    </style>
+  </body>
+</html>

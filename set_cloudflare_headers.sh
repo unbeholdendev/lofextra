@@ -2,7 +2,7 @@
 
 echo "creating _headers file for cloudflare deployment"
 
-cat > ./out/_headers <<EOF
+cat > ./dist/_headers <<EOF
 /*
   cross-origin-embedder-policy: require-corp
   cross-origin-opener-policy: same-origin

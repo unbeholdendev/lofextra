@@ -1,0 +1,17 @@
+---
+import { App } from "../../containers/Dashboard/App";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  return [
+    { params: { path: undefined } },
+    { params: { path: "statistics" } },
+    { params: { path: "categories" } },
+    { params: { path: "account" } },
+  ];
+}
+---
+
+<Layout title="lofextra - dashboard">
+  <App client:only="react" />
+</Layout>

@@ -1,4 +1,8 @@
-import { FieldValues, RegisterOptions, useFormContext } from "react-hook-form";
+import {
+  useFormContext,
+  type FieldValues,
+  type RegisterOptions,
+} from "react-hook-form";
 
 type Props = {
   name: string;

@@ -1,0 +1,42 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="lofextra - local-first expense tracker">
+  <main>
+    <h1>lofextra (beta)</h1>
+
+    <h3>local-first expense tracker</h3>
+
+    <a href="/dashboard">
+      <button>to app</button>
+    </a>
+
+    <ul>
+      <li>retain full ownership of your data securely and privately</li>
+      <li>real-time e2e encrypted updates between multiple devices</li>
+      <li>use mnemonic phrase as key to your account</li>
+      <li>no registration, no email, no password</li>
+      <li>install the app to get the native app feel</li>
+      <li>works offline</li>
+    </ul>
+  </main>
+</Layout>
+
+<style>
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 3rem;
+  }
+
+  main > h3 {
+    margin-bottom: 3rem;
+  }
+
+  main > a {
+    margin-bottom: 3rem;
+  }
+</style>
