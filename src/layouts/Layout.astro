@@ -38,11 +38,11 @@ const description = "local-first expense tracker";
     <meta name="twitter:description" content={description} />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="75x75" />
 
-    <link
-      rel="preload"
-      href="https://plausible.lofextra.com/js/script.js"
-      as="script"
-    />
+    <script
+      is:inline
+      defer
+      data-domain="lofextra.com"
+      src="https://plausible.lofextra.com/js/script.js"></script>
 
     <ViewTransitions />
   </head>
