@@ -1,7 +1,7 @@
 import react from "@astrojs/react";
 import AstroPWA from "@vite-pwa/astro";
 import { defineConfig } from "astro/config";
-import manifest from "./manifest.webmanifest";
+import manifest from "./manifest.json";
 
 // https://astro.build/config
 export default defineConfig({
