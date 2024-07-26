@@ -13,6 +13,7 @@
   "dependencies": {
     "@astrojs/check": "^0.8.2",
     "@astrojs/react": "^3.6.0",
+    "@astrojs/sitemap": "^3.1.6",
     "@hookform/resolvers": "^3.9.0",
     "@lofik/react": "^2.0.2",
     "@tanstack/react-router": "^1.45.10",
@@ -21,6 +22,7 @@
     "math-expression-evaluator": "^2.0.5",
     "react-hook-form": "^7.52.1",
     "typescript": "^5.5.3",
+    "vite": "^5.3.5",
     "zod": "^3.23.8"
   }
 }

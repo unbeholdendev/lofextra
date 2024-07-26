@@ -1,10 +1,19 @@
 import react from "@astrojs/react";
+import sitemap from "@astrojs/sitemap";
 import AstroPWA from "@vite-pwa/astro";
 import { defineConfig } from "astro/config";
+import { loadEnv } from "vite";
 import manifest from "./manifest.json";
+
+const { PUBLIC_SITE_URL } = loadEnv(
+  process.env.PUBLIC_SITE_URL,
+  process.cwd(),
+  ""
+);
 
 // https://astro.build/config
 export default defineConfig({
+  site: PUBLIC_SITE_URL,
   integrations: [
     react(),
     AstroPWA({
@@ -12,6 +21,7 @@ export default defineConfig({
       manifest,
       manifestFilename: "manifest.json",
     }),
+    sitemap(),
   ],
   // prefetch: true,
   vite: {
