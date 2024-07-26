@@ -1,10 +1,9 @@
 {
   "name": "lofextra - local-first expense tracker",
   "short_name": "lofextra",
-  "description": "local-first expense tracker",
   "theme_color": "#ff9500",
   "background_color": "#13171f",
-  "start_url": "https://lofextra/dashboard",
+  "start_url": "/dashboard",
   "display": "standalone",
   "orientation": "portrait",
   "icons": [

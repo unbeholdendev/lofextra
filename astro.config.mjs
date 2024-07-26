@@ -5,7 +5,14 @@ import manifest from "./manifest.json";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [react(), AstroPWA({ disable: import.meta.env.DEV, manifest })],
+  integrations: [
+    react(),
+    AstroPWA({
+      disable: import.meta.env.DEV,
+      manifest,
+      manifestFilename: "manifest.json",
+    }),
+  ],
   // prefetch: true,
   vite: {
     // this is needed because there's issue in vite regarding importing worker files
