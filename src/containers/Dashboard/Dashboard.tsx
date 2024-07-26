@@ -1,4 +1,5 @@
 import { useLofikAccount, useLofikQuery } from "@lofik/react";
+import { useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { z } from "zod";
 import { QueryKeys } from "../../queries";
@@ -15,6 +16,7 @@ const DAYS_AGO_30_TS = getTimestampAfterSubtractingDays(30);
 
 export const Dashboard = () => {
   const { pubKeyHex } = useLofikAccount();
+  const navigate = useNavigate();
 
   const [modalTransaction, setModalTransaction] =
     useState<ModalTransaction | null>(null);
@@ -53,7 +55,13 @@ export const Dashboard = () => {
 
       <Transactions
         transactions={transactions}
-        setModalTransaction={setModalTransaction}
+        onDetailClick={(transaction) => setModalTransaction(transaction)}
+        // onDetailClick={(transaction) =>
+        //   navigate({
+        //     to: routes.TRANSACTION_DETAIL,
+        //     params: { id: transaction.id },
+        //   })
+        // }
       />
 
       {modalTransaction && (

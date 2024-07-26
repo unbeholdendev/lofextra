@@ -1,15 +1,11 @@
 ---
+import type { GetStaticPaths } from "astro";
 import { App } from "../../containers/Dashboard/App";
 import Layout from "../../layouts/Layout.astro";
 
-export async function getStaticPaths() {
-  return [
-    { params: { path: undefined } },
-    { params: { path: "statistics" } },
-    { params: { path: "categories" } },
-    { params: { path: "account" } },
-  ];
-}
+export const getStaticPaths: GetStaticPaths = async () => {
+  return [{ params: { path: undefined } }];
+};
 ---
 
 <Layout title="lofextra - dashboard">

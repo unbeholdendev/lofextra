@@ -1,23 +1,22 @@
-import { type Dispatch, type SetStateAction } from "react";
 import { type Transaction as TransactionType } from "../../../validators/types";
-import { Transaction } from "./Transaction";
 import { type ModalTransaction } from "./TransactionFormModal";
+import { TransactionRow } from "./TransactionRow";
 import styles from "./styles.module.css";
 
 type Props = {
   transactions: TransactionType[] | undefined;
-  setModalTransaction: Dispatch<SetStateAction<ModalTransaction | null>>;
+  onDetailClick: (transaction: ModalTransaction) => void;
 };
 
-export const Transactions = ({ transactions, setModalTransaction }: Props) => {
+export const Transactions = ({ transactions, onDetailClick }: Props) => {
   return (
     <div className={styles.scroll}>
       {transactions?.length ? (
         transactions.map((transaction) => (
-          <Transaction
+          <TransactionRow
             key={transaction.id}
             transaction={transaction}
-            onDetailClick={(transaction) => setModalTransaction(transaction)}
+            onDetailClick={onDetailClick}
           />
         ))
       ) : (

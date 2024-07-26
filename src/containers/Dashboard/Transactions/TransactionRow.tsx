@@ -11,7 +11,7 @@ type Props = {
   transaction: TransactionType;
   onDetailClick: (transaction: TransactionType) => void;
 };
-export const Transaction = ({ transaction, onDetailClick }: Props) => {
+export const TransactionRow = ({ transaction, onDetailClick }: Props) => {
   const { pubKeyHex } = useLofikAccount();
 
   const { data } = useLofikQuery({
