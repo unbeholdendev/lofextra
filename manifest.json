@@ -4,7 +4,7 @@
   "description": "local-first expense tracker",
   "theme_color": "#ff9500",
   "background_color": "#13171f",
-  "start_url": "/dashboard",
+  "start_url": "https://lofextra/dashboard",
   "display": "standalone",
   "orientation": "portrait",
   "icons": [
