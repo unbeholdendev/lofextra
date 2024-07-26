@@ -13,7 +13,7 @@ export const Donate = () => {
   const [type, setType] = useState<"lightning" | "bitcoin">("lightning");
 
   return (
-    <main className={styles.main}>
+    <section className={styles.section}>
       <h1>donate</h1>
 
       <p>
@@ -22,7 +22,7 @@ export const Donate = () => {
         really appreciate it, thank you.
       </p>
 
-      <section>
+      <div>
         <div className={styles.center}>
           <button
             className={`${styles["margin-horizontal"]} ${
@@ -97,7 +97,7 @@ export const Donate = () => {
             </div>
           )}
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
   );
 };

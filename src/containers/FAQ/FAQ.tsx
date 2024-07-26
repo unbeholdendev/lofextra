@@ -1,10 +1,10 @@
 import styles from "./styles.module.css";
 
 export const FAQ = () => (
-  <main className={styles.main}>
+  <section className={styles.section}>
     <h1>frequently asked questions</h1>
 
-    <section>
+    <div>
       <div className={styles.question}>what is this app about?</div>
       <div className={styles.answer}>
         lofextra allows you to track your and your family expenses in a secure
@@ -87,6 +87,6 @@ export const FAQ = () => (
       <div className={styles.answer}>
         i would really appreciate it. please, go <a href="/donate">here</a>
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
 );

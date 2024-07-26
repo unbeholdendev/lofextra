@@ -1,7 +1,5 @@
-.main {
-  flex: 1;
+.section {
   overflow-y: scroll;
-  padding: 0;
   display: flex;
   flex-direction: column;
 }

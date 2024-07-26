@@ -3,10 +3,10 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="lofextra - local-first expense tracker">
-  <main>
+  <section>
     <h1>lofextra (beta)</h1>
 
-    <h3>local-first expense tracker</h3>
+    <h2>local-first expense tracker</h2>
 
     <a href="/dashboard">
       <button>to app</button>
@@ -20,23 +20,24 @@ import Layout from "../layouts/Layout.astro";
       <li>install the app to get the native app feel</li>
       <li>works offline</li>
     </ul>
-  </main>
+  </section>
 </Layout>
 
 <style>
-  main {
-    flex: 1;
+  section {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 3rem;
   }
 
-  main > h3 {
+  h2 {
     margin-bottom: 3rem;
+    font-size: 1.5rem;
+    color: var(--pico-h3-color);
   }
 
-  main > a {
+  a {
     margin-bottom: 3rem;
   }
 </style>
