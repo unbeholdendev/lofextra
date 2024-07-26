@@ -38,8 +38,9 @@ export const Recovery = () => {
   const handleServerSync = async () => {
     setIsServerSyncing(true);
 
-    const categories =
-      await sqlocal.sql`select * from categories where pubKeyHex = '${pubKeyHex}' and deletedAt is null`;
+    const categories = await sqlocal.sql(
+      `SELECT * FROM categories WHERE pubKeyHex = '${pubKeyHex}' AND deletedAt IS NULL`
+    );
 
     const categoriesMutations: GenerateDatabaseMutation[] = categories.map(
       (category) => ({
@@ -52,8 +53,9 @@ export const Recovery = () => {
       })
     );
 
-    const transactions =
-      await sqlocal.sql`select * from transactions where pubKeyHex = '${pubKeyHex}' and deletedAt is null`;
+    const transactions = await sqlocal.sql(
+      `SELECT * FROM transactions WHERE pubKeyHex = '${pubKeyHex}' AND deletedAt IS NULL`
+    );
 
     const transactionsMutations: GenerateDatabaseMutation[] = transactions.map(
       (transaction) => ({
