@@ -24,7 +24,7 @@ export default defineConfig({
     }),
     sitemap(),
   ],
-  // prefetch: true,
+  prefetch: true,
   vite: {
     // this is needed because there's issue in vite regarding importing worker files
     // https://github.com/vitejs/vite/issues/8427
