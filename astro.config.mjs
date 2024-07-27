@@ -20,6 +20,7 @@ export default defineConfig({
       disable: import.meta.env.DEV,
       manifest,
       manifestFilename: "manifest.json",
+      registerType: "autoUpdate",
     }),
     sitemap(),
   ],
