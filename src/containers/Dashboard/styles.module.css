@@ -2,6 +2,7 @@
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
+  margin-bottom: 0;
 }
 
 .full-menu {
