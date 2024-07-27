@@ -57,6 +57,7 @@ export const CategoryFormModal = ({ category, onSuccess, onClose }: Props) => {
   return (
     <Modal
       onClose={onClose}
+      showCloseIcon
       header={
         <strong>{category.id ? "update category" : "add category"}</strong>
       }

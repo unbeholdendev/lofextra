@@ -2,21 +2,25 @@ import { type ReactNode } from "react";
 
 type Props = {
   onClose: () => void;
+  showCloseIcon?: boolean;
   header?: ReactNode;
   children: ReactNode;
 };
 
-export const Modal = ({ header, onClose, children }: Props) => {
+export const Modal = ({ header, onClose, showCloseIcon, children }: Props) => {
   return (
     <dialog open>
       <article>
         <header>
-          <button
-            type="button"
-            aria-label="Close"
-            rel="prev"
-            onClick={onClose}
-          ></button>
+          {showCloseIcon && (
+            <button
+              type="button"
+              aria-label="Close"
+              rel="prev"
+              onClick={onClose}
+            />
+          )}
+
           {header}
         </header>
 

@@ -1,36 +1,26 @@
-import { type Dispatch, type SetStateAction } from "react";
-import { getUnixTimestamp } from "../../../utils/dates";
+import { useNavigate } from "@tanstack/react-router";
 import { formatNumber } from "../../../utils/formatters";
-import type { ModalTransaction } from "./TransactionFormModal";
+import { routes } from "../routes";
 import styles from "./styles.module.css";
 
 type Props = {
   total: number;
-  setModalTransaction: Dispatch<SetStateAction<ModalTransaction | null>>;
 };
 
-export const Overview = ({ total, setModalTransaction }: Props) => {
+export const Overview = ({ total }: Props) => {
+  const navigate = useNavigate();
+
   return (
     <div className={styles.overview}>
       <div>
-        <div>last 30 days spent</div>
+        <div>spent in last 30 days</div>
         <div className={styles.large}>
           <strong>{formatNumber(total || 0)}</strong>
         </div>
       </div>
 
-      <button
-        onClick={() =>
-          setModalTransaction({
-            id: null,
-            title: "",
-            amount: null,
-            categoryId: "",
-            createdAt: getUnixTimestamp(),
-          })
-        }
-      >
-        add expense
+      <button onClick={() => navigate({ to: routes.TRANSACTION_CREATE })}>
+        create transaction
       </button>
     </div>
   );

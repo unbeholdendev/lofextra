@@ -1,14 +1,17 @@
 import { useLofikAccount, useLofikQuery } from "@lofik/react";
-import { getRouteApi } from "@tanstack/react-router";
+import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import { QueryKeys } from "../../../queries";
 import { transactionsSchema } from "../../../validators/validators";
 import { routes } from "../routes";
+import { TransactionDetailHeader } from "./TransactionDetailHeader";
+import { TransactionForm } from "./TransactionForm";
 
 const { useParams } = getRouteApi(routes.TRANSACTION_DETAIL);
 
 export const TransactionDetail = () => {
   const params = useParams();
   const { pubKeyHex } = useLofikAccount();
+  const navigate = useNavigate();
 
   const { data } = useLofikQuery({
     sql: `
@@ -20,9 +23,30 @@ export const TransactionDetail = () => {
       `,
     schema: transactionsSchema,
     queryKey: [QueryKeys.GET_TRANSACTION, pubKeyHex],
+    enabled: !!params.id,
   });
 
   const transaction = data?.[0];
 
-  return <pre>{JSON.stringify(transaction, null, 2)}</pre>;
+  const navigateToDashboard = () => navigate({ to: routes.DASHBOARD });
+
+  return (
+    <>
+      <TransactionDetailHeader
+        transactionId={transaction?.id as string}
+        onDeleteSuccess={navigateToDashboard}
+        withMarginBottom
+      />
+
+      {transaction ? (
+        <TransactionForm
+          transaction={transaction}
+          onSuccess={navigateToDashboard}
+          onCancel={navigateToDashboard}
+        />
+      ) : (
+        <div>transaction not found</div>
+      )}
+    </>
+  );
 };

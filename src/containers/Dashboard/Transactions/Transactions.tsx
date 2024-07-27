@@ -1,11 +1,10 @@
 import { type Transaction as TransactionType } from "../../../validators/types";
-import { type ModalTransaction } from "./TransactionFormModal";
 import { TransactionRow } from "./TransactionRow";
 import styles from "./styles.module.css";
 
 type Props = {
   transactions: TransactionType[] | undefined;
-  onDetailClick: (transaction: ModalTransaction) => void;
+  onDetailClick: (transaction: TransactionType) => void;
 };
 
 export const Transactions = ({ transactions, onDetailClick }: Props) => {

@@ -15,6 +15,7 @@ import { Dashboard } from "./Dashboard";
 import { routes } from "./routes";
 import { Statistics } from "./Statistics/Statistics";
 import styles from "./styles.module.css";
+import { TransactionCreate } from "./Transactions/TransactionCreate";
 import { TransactionDetail } from "./Transactions/TransactionDetail";
 
 const SubMenuLinks = () => {
@@ -151,12 +152,19 @@ const transactionDetailRoute = createRoute({
   component: TransactionDetail,
 });
 
+const transactionCreateRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: routes.TRANSACTION_CREATE,
+  component: TransactionCreate,
+});
+
 const routeTree = rootRoute.addChildren([
   dashboardRoute,
   statisticsRoute,
   categoriesRoute,
   accountRoute,
   transactionDetailRoute,
+  transactionCreateRoute,
 ]);
 
 const hashHistory = createHashHistory();

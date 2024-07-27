@@ -47,3 +47,21 @@
   align-items: center;
   margin-bottom: 3rem;
 }
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delete {
+  cursor: pointer;
+}
+
+.no-margin-bottom {
+  margin-bottom: 0;
+}
+
+.header-margin-bottom {
+  margin-bottom: 1rem;
+}

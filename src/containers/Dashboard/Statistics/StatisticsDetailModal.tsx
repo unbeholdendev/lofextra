@@ -4,11 +4,9 @@ import { Modal } from "../../../components/Modal";
 import { QueryKeys } from "../../../queries";
 import { getDateFromTimestamp } from "../../../utils/dates";
 import { formatNumber } from "../../../utils/formatters";
+import type { Transaction } from "../../../validators/types";
 import { transactionsSchema } from "../../../validators/validators";
-import {
-  TransactionFormModal,
-  type ModalTransaction,
-} from "../Transactions/TransactionFormModal";
+import { TransactionFormModal } from "../Transactions/TransactionFormModal";
 import styles from "./styles.module.css";
 
 type Props = {
@@ -29,8 +27,9 @@ export const StatisticsDetailModal = ({
   onClose,
 }: Props) => {
   const { pubKeyHex } = useLofikAccount();
-  const [modalTransaction, setModalTransaction] =
-    useState<ModalTransaction | null>(null);
+  const [modalTransaction, setModalTransaction] = useState<Transaction | null>(
+    null
+  );
 
   const categoryCondition =
     categoryId === "-1" ? "c.id IS NULL" : `t.categoryId = '${categoryId}'`;
@@ -64,6 +63,7 @@ export const StatisticsDetailModal = ({
     <>
       <Modal
         onClose={onClose}
+        showCloseIcon
         header={
           <div>
             <strong className={styles.large}>{categoryTitle}</strong>{" "}

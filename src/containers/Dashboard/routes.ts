@@ -4,4 +4,5 @@ export const routes = {
   CATEGORIES: "/categories",
   ACCOUNT: "/account",
   TRANSACTION_DETAIL: "/transactions/$id",
+  TRANSACTION_CREATE: "/transactions/create",
 };
