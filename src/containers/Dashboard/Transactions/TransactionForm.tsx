@@ -119,15 +119,13 @@ export const TransactionForm = ({
       </fieldset>
 
       <div className={styles["flex-container"]}>
-        {transaction.id && (
-          <button
-            type="button"
-            className={`contrast ${styles.flex} ${styles["no-margin-bottom"]}`}
-            onClick={onCancel}
-          >
-            cancel
-          </button>
-        )}
+        <button
+          type="button"
+          className={`contrast ${styles.flex} ${styles["no-margin-bottom"]}`}
+          onClick={onCancel}
+        >
+          cancel
+        </button>
 
         <button
           className={`${styles.flex} ${styles["no-margin-bottom"]}`}
