@@ -7,6 +7,7 @@ import {
   Link,
   Outlet,
   RouterProvider,
+  ScrollRestoration,
   useLocation,
 } from "@tanstack/react-router";
 import { Account } from "./Account/Account";
@@ -114,6 +115,7 @@ const rootRoute = createRootRoute({
           websocketServerUrl={import.meta.env.PUBLIC_WS_URL}
         >
           <section className={styles.section}>
+            <ScrollRestoration />
             <Outlet />
           </section>
         </LofikProvider>
