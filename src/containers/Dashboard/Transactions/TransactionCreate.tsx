@@ -1,4 +1,4 @@
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter } from "@tanstack/react-router";
 import { getUnixTimestamp } from "../../../utils/dates";
 import { routes } from "../routes";
 import { TransactionForm } from "./TransactionForm";
@@ -12,9 +12,10 @@ const newTransaction = {
 };
 
 export const TransactionCreate = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
-  const navigateToDashboard = () => navigate({ to: routes.DASHBOARD });
+  const navigateToDashboard = () => router.navigate({ to: routes.DASHBOARD });
+  const goBack = () => router.history.back();
 
   return (
     <>
@@ -23,7 +24,7 @@ export const TransactionCreate = () => {
       <TransactionForm
         transaction={newTransaction}
         onSuccess={navigateToDashboard}
-        onCancel={navigateToDashboard}
+        onCancel={goBack}
       />
     </>
   );

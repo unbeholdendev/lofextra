@@ -1,5 +1,5 @@
 import { useLofikAccount, useLofikQuery } from "@lofik/react";
-import { getRouteApi, useNavigate } from "@tanstack/react-router";
+import { getRouteApi, useRouter } from "@tanstack/react-router";
 import { QueryKeys } from "../../../queries";
 import { transactionsSchema } from "../../../validators/validators";
 import { routes } from "../routes";
@@ -11,7 +11,7 @@ const { useParams } = getRouteApi(routes.TRANSACTION_DETAIL);
 export const TransactionDetail = () => {
   const params = useParams();
   const { pubKeyHex } = useLofikAccount();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const { data } = useLofikQuery({
     sql: `
@@ -28,7 +28,8 @@ export const TransactionDetail = () => {
 
   const transaction = data?.[0];
 
-  const navigateToDashboard = () => navigate({ to: routes.DASHBOARD });
+  const navigateToDashboard = () => router.navigate({ to: routes.DASHBOARD });
+  const goBack = () => router.history.back();
 
   return (
     <>
@@ -42,7 +43,7 @@ export const TransactionDetail = () => {
         <TransactionForm
           transaction={transaction}
           onSuccess={navigateToDashboard}
-          onCancel={navigateToDashboard}
+          onCancel={goBack}
         />
       ) : (
         <div>transaction not found</div>
