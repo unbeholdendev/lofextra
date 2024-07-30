@@ -17,7 +17,8 @@ export const CategoryPicker = ({ name, ...props }: Props) => {
       SELECT * FROM categories 
       WHERE 
         pubKeyHex = '${pubKeyHex}' 
-        AND deletedAt IS NULL`,
+        AND deletedAt IS NULL
+      ORDER BY sortOrder`,
     schema: categoriesSchema,
     queryKey: [QueryKeys.GET_CATEGORIES, pubKeyHex],
   });

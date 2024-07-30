@@ -18,6 +18,7 @@ export const categorySchema = z.object({
   id: z.string(),
   title: z.string(),
   pubKeyHex: z.string(),
+  sortOrder: z.number(),
   deletedAt: z.number().nullable(),
   updatedAt: z.number(),
   createdAt: z.number(),

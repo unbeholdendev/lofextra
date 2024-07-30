@@ -26,8 +26,22 @@
   gap: 1rem;
 }
 
-.action-container {
+.overview-container {
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.large {
+  font-size: 1.5rem;
+}
+
+.small {
+  font-size: 0.7rem;
+  margin-bottom: 0.5rem;
+}
+
+.dnd {
+  margin-right: 0.5rem;
 }

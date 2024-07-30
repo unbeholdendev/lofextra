@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   DatabaseMutationOperation,
+  sqlocal,
   useLofikAccount,
   useLofikMutation,
 } from "@lofik/react";
@@ -13,8 +14,8 @@ import styles from "./styles.module.css";
 
 export type ModalCategory = Omit<
   CategoryType,
-  "id" | "pubKeyHex" | "updatedAt" | "deletedAt" | "createdAt"
-> & { id: string | null; createdAt?: number };
+  "id" | "pubKeyHex" | "updatedAt" | "deletedAt" | "createdAt" | "sortOrder"
+> & { id: string | null; sortOrder?: number; createdAt?: number };
 
 type Props = {
   category: ModalCategory;
@@ -41,6 +42,10 @@ export const CategoryFormModal = ({ category, onSuccess, onClose }: Props) => {
   });
 
   const onSubmit = async ({ title }: FormValues) => {
+    const categoriesSortOrder = await sqlocal.sql(
+      `SELECT MAX(sortOrder) AS 'maxSortOrder' FROM categories WHERE pubKeyHex = '${pubKeyHex}' AND deletedAt IS NULL`
+    );
+
     mutate({
       operation: DatabaseMutationOperation.Upsert,
       tableName: "categories",
@@ -48,6 +53,8 @@ export const CategoryFormModal = ({ category, onSuccess, onClose }: Props) => {
         id: category.id || crypto.randomUUID(),
         title,
         pubKeyHex,
+        sortOrder:
+          category.sortOrder || categoriesSortOrder[0].maxSortOrder + 1,
         deletedAt: null,
         createdAt: category.createdAt || Date.now(),
       },
