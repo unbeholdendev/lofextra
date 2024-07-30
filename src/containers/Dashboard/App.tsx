@@ -12,6 +12,8 @@ import {
 } from "@tanstack/react-router";
 import { Account } from "./Account/Account";
 import { Categories } from "./Categories/Categories";
+import { CategoryCreate } from "./Categories/CategoryCreate";
+import { CategoryDetail } from "./Categories/CategoryDetail";
 import { Dashboard } from "./Dashboard";
 import { runMigrations } from "./migrations";
 import { routes } from "./routes";
@@ -164,10 +166,24 @@ const transactionCreateRoute = createRoute({
   component: TransactionCreate,
 });
 
+const categoryDetailRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: routes.CATEGORY_DETAIL,
+  component: CategoryDetail,
+});
+
+const categoryCreateRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: routes.CATEGORY_CREATE,
+  component: CategoryCreate,
+});
+
 const routeTree = rootRoute.addChildren([
   dashboardRoute,
   statisticsRoute,
   categoriesRoute,
+  categoryDetailRoute,
+  categoryCreateRoute,
   accountRoute,
   transactionDetailRoute,
   transactionCreateRoute,

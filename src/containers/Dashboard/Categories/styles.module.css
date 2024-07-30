@@ -8,7 +8,6 @@
   margin-bottom: 0.5rem;
   padding: 0.5rem;
   border-radius: 5px;
-  justify-content: space-between;
 }
 
 .category-row:hover {
@@ -44,4 +43,19 @@
 
 .dnd {
   margin-right: 0.5rem;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.no-margin-bottom {
+  margin-bottom: 0;
+}
+
+.delete {
+  cursor: pointer;
 }

@@ -8,7 +8,6 @@ import {
 import { type TypeOf, z } from "zod";
 import { Form } from "../../../components/Form";
 import { Input } from "../../../components/Input";
-import { Modal } from "../../../components/Modal";
 import { type Category as CategoryType } from "../../../validators/types";
 import styles from "./styles.module.css";
 
@@ -19,8 +18,8 @@ export type ModalCategory = Omit<
 
 type Props = {
   category: ModalCategory;
-  onSuccess: () => void;
-  onClose: () => void;
+  onSuccess?: () => void;
+  onCancel?: () => void;
 };
 
 const schema = z.object({
@@ -29,16 +28,12 @@ const schema = z.object({
 
 type FormValues = TypeOf<typeof schema>;
 
-export const CategoryFormModal = ({ category, onSuccess, onClose }: Props) => {
+export const CategoryForm = ({ category, onSuccess, onCancel }: Props) => {
   const { pubKeyHex } = useLofikAccount();
 
   const { mutate } = useLofikMutation({
     shouldSync: true,
-    onSuccess: () => {
-      onSuccess();
-
-      onClose();
-    },
+    onSuccess,
   });
 
   const onSubmit = async ({ title }: FormValues) => {
@@ -62,30 +57,30 @@ export const CategoryFormModal = ({ category, onSuccess, onClose }: Props) => {
   };
 
   return (
-    <Modal
-      onClose={onClose}
-      showCloseIcon
-      header={
-        <strong>{category.id ? "update category" : "add category"}</strong>
-      }
+    <Form<FormValues>
+      onSubmit={onSubmit}
+      resolver={zodResolver(schema)}
+      values={{
+        title: category.title,
+      }}
     >
-      <Form<FormValues>
-        onSubmit={onSubmit}
-        resolver={zodResolver(schema)}
-        values={{
-          title: category.title,
-        }}
-      >
-        <fieldset>
-          <Input name="title" placeholder="title" aria-label="title" />
-        </fieldset>
+      <fieldset>
+        <Input name="title" placeholder="title" aria-label="title" />
+      </fieldset>
 
-        <div className={styles["flex-container"]}>
-          <button className={styles.flex} type="submit">
-            {category.id ? "save" : "add"}
-          </button>
-        </div>
-      </Form>
-    </Modal>
+      <div className={styles["flex-container"]}>
+        <button
+          type="button"
+          className={`contrast ${styles.flex}`}
+          onClick={onCancel}
+        >
+          cancel
+        </button>
+
+        <button className={styles.flex} type="submit">
+          {category.id ? "save" : "add"}
+        </button>
+      </div>
+    </Form>
   );
 };

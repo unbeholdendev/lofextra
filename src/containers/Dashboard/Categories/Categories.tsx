@@ -9,26 +9,24 @@ import {
   useLofikMutation,
   useLofikQuery,
 } from "@lofik/react";
+import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import type { TypeOf } from "zod";
 import { QueryKeys } from "../../../queries";
 import { arrayMove } from "../../../utils/array";
 import { categoriesSchema } from "../../../validators/validators";
+import { routes } from "../routes";
 import { Category } from "./Category";
-import { CategoryFormModal, type ModalCategory } from "./CategoryFormModal";
 import styles from "./styles.module.css";
 
 export const Categories = () => {
   const { pubKeyHex } = useLofikAccount();
+  const navigate = useNavigate();
 
   // using the state here as a 'hack' to prevent flickering issue when dropping caused by react-query
   // https://codesandbox.io/s/react-beautiful-dnd-flicker-after-synchronous-update-with-reactquery-n207n1
   const [categoriesState, setCategoriesState] =
     useState<TypeOf<typeof categoriesSchema>>();
-
-  const [modalCategory, setModalCategory] = useState<ModalCategory | null>(
-    null
-  );
 
   const { data: categories, refetch } = useLofikQuery({
     sql: `
@@ -91,9 +89,8 @@ export const Categories = () => {
 
         <button
           onClick={() =>
-            setModalCategory({
-              id: null,
-              title: "",
+            navigate({
+              to: routes.CATEGORY_CREATE,
             })
           }
         >
@@ -121,7 +118,12 @@ export const Categories = () => {
                     key={category.id}
                     index={index}
                     category={category}
-                    onDetailClick={(category) => setModalCategory(category)}
+                    onDetailClick={(category) =>
+                      navigate({
+                        to: routes.CATEGORY_DETAIL,
+                        params: { id: category.id },
+                      })
+                    }
                     onDelete={refetch}
                   />
                 ))}
@@ -133,16 +135,6 @@ export const Categories = () => {
         </DragDropContext>
       ) : (
         <div>no categories yet..</div>
-      )}
-
-      {modalCategory && (
-        <CategoryFormModal
-          category={modalCategory}
-          onSuccess={() => {
-            refetch();
-          }}
-          onClose={() => setModalCategory(null)}
-        />
       )}
     </>
   );
