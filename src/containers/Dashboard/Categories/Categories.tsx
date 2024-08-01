@@ -54,7 +54,7 @@ export const Categories = () => {
     const { draggableId, source, destination } = result;
 
     if (
-      !destination?.index ||
+      !destination ||
       source.index === destination.index ||
       !categoriesState
     ) {
