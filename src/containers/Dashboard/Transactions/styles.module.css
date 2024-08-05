@@ -16,6 +16,12 @@
   transition: 0.3s;
 }
 
+.transaction-row-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
 .margin-bottom {
   margin-bottom: 0.2rem;
 }

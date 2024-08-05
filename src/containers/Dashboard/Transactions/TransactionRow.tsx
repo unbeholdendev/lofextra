@@ -47,7 +47,7 @@ export const TransactionRow = ({ transaction, onDetailClick }: Props) => {
         )}
       </div>
 
-      <div>
+      <div className={styles["transaction-row-right"]}>
         <p className={styles["margin-bottom"]}>
           <strong>{formatNumber(transaction.amount)}</strong>
         </p>
