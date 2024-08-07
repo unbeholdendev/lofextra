@@ -3,14 +3,6 @@ import { getUnixTimestamp } from "../../../utils/dates";
 import { routes } from "../routes";
 import { TransactionForm } from "./TransactionForm";
 
-const newTransaction = {
-  id: null,
-  title: "",
-  amount: null,
-  categoryId: "",
-  createdAt: getUnixTimestamp(),
-};
-
 export const TransactionCreate = () => {
   const router = useRouter();
 
@@ -22,7 +14,13 @@ export const TransactionCreate = () => {
       <h3>create transaction</h3>
 
       <TransactionForm
-        transaction={newTransaction}
+        transaction={{
+          id: null,
+          title: "",
+          amount: null,
+          categoryId: "",
+          createdAt: getUnixTimestamp(),
+        }}
         onSuccess={navigateToDashboard}
         onCancel={goBack}
       />
