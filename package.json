@@ -16,7 +16,7 @@
     "@astrojs/sitemap": "^3.1.6",
     "@hello-pangea/dnd": "^16.6.0",
     "@hookform/resolvers": "^3.9.0",
-    "@lofik/react": "^2.0.12",
+    "@lofik/react": "^2.0.13",
     "@tanstack/react-router": "^1.45.10",
     "@vite-pwa/astro": "^0.4.0",
     "astro": "^4.12.2",
