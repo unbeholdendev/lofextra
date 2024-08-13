@@ -25,7 +25,7 @@
   gap: 1rem;
 }
 
-.overview-container {
+.overview {
   display: flex;
   justify-content: space-between;
   align-items: center;

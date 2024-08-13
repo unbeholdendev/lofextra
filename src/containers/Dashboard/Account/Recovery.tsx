@@ -53,6 +53,20 @@ export const Recovery = () => {
       })
     );
 
+    const recurringTransactions = await sqlocal.sql(
+      `SELECT * FROM recurringTransactions WHERE pubKeyHex = '${pubKeyHex}' AND deletedAt IS NULL`
+    );
+
+    const recurringTransactionsMutations: GenerateDatabaseMutation[] =
+      recurringTransactions.map((recurringTransaction) => ({
+        operation: DatabaseMutationOperation.Upsert,
+        tableName: "recurringTransactions",
+        columnDataMap: {
+          ...recurringTransaction,
+          updatedAt: getUnixTimestamp(),
+        },
+      }));
+
     const transactions = await sqlocal.sql(
       `SELECT * FROM transactions WHERE pubKeyHex = '${pubKeyHex}' AND deletedAt IS NULL`
     );
@@ -68,7 +82,11 @@ export const Recovery = () => {
       })
     );
 
-    const mutations = [...categoriesMutations, ...transactionsMutations];
+    const mutations = [
+      ...categoriesMutations,
+      ...recurringTransactionsMutations,
+      ...transactionsMutations,
+    ];
 
     await mutateAsync(mutations);
   };

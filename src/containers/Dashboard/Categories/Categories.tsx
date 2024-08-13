@@ -79,7 +79,7 @@ export const Categories = () => {
 
   return (
     <>
-      <div className={styles["overview-container"]}>
+      <div className={styles.overview}>
         <div>
           <div>categories total</div>
           <div className={styles.large}>
@@ -104,7 +104,7 @@ export const Categories = () => {
         </span>
       )}
 
-      {categoriesState?.length ? (
+      {!!categoriesState?.length ? (
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable">
             {(provided) => (

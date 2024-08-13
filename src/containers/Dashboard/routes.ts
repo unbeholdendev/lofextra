@@ -7,4 +7,7 @@ export const routes = {
   ACCOUNT: "/account",
   TRANSACTION_DETAIL: "/transactions/$id",
   TRANSACTION_CREATE: "/transactions/create",
+  RECURRING_TRANSACTIONS: "/recurring-transactions",
+  RECURRING_TRANSACTIONS_DETAIL: "/recurring-transactions/$id",
+  RECURRING_TRANSACTIONS_CREATE: "/recurring-transactions/create",
 };

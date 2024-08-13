@@ -34,7 +34,7 @@ Manage your own custom categories.
 
 You're on vacation and pay in a different currency? This is the basic use case that should be supported. The plan is to pull the exchange rate from some open API when adding/editing transaction with a non-default currency and display the expense amount in both currencies.
 
-#### Recurring transactions
+#### Recurring transactions [DONE]
 
 Saves you time so that you don't have to input transactions that happen on regular basis.
 

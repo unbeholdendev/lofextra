@@ -19,6 +19,8 @@ export const TransactionCreate = () => {
           title: "",
           amount: null,
           categoryId: "",
+          recurringTransactionId: null,
+          recurringTransactionIndex: null,
           createdAt: getUnixTimestamp(),
         }}
         onSuccess={navigateToDashboard}

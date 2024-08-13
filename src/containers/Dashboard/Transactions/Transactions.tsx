@@ -10,7 +10,7 @@ type Props = {
 export const Transactions = ({ transactions, onDetailClick }: Props) => {
   return (
     <div className={styles.scroll}>
-      {transactions?.length ? (
+      {!!transactions?.length ? (
         transactions.map((transaction) => (
           <TransactionRow
             key={transaction.id}

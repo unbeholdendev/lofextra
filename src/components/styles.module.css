@@ -6,3 +6,7 @@
   display: flex;
   gap: 1rem;
 }
+
+.content {
+  margin-bottom: 2rem;
+}
