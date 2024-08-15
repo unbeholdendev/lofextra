@@ -34,6 +34,8 @@ export const Recovery = () => {
     }
 
     await importDatabase(file);
+
+    location.reload();
   };
 
   const handleServerSync = async () => {

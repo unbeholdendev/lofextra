@@ -23,7 +23,7 @@ type FormValues = TypeOf<typeof schema>;
 export const ConfigModalForm = () => {
   const { pubKeyHex } = useLofikAccount();
 
-  const { mutate, isPending } = useLofikMutation({
+  const { mutate, isPending, error } = useLofikMutation({
     shouldSync: true,
   });
 
