@@ -11,6 +11,7 @@ import { z, type TypeOf } from "zod";
 import { CurrencyPicker } from "../../../components/CurrencyPicker";
 import { Form } from "../../../components/Form";
 import { Modal } from "../../../components/Modal";
+import { useFullServerSync } from "../../../hooks/useFullServerSync";
 import { getUnixTimestamp } from "../../../utils/dates";
 import { QueryKeys, TableNames } from "../constants";
 
@@ -22,76 +23,66 @@ type FormValues = TypeOf<typeof schema>;
 
 export const ConfigModalForm = () => {
   const { pubKeyHex } = useLofikAccount();
+  const { handleFullServerSync, isLoading } = useFullServerSync();
 
-  const { mutate, isPending } = useLofikMutation({
-    shouldSync: true,
+  const { mutateAsync, isPending } = useLofikMutation({
+    shouldSync: false,
   });
 
-  const handleSubmit = ({ baseCurrency }: FormValues) => {
-    mutate(
-      {
-        operation: DatabaseMutationOperation.Upsert,
-        tableName: TableNames.CONFIGS,
-        identifierColumn: "pubKeyHex",
-        columnDataMap: {
-          pubKeyHex,
-          baseCurrency,
-          createdAt: getUnixTimestamp(),
-        },
+  const handleSubmit = async ({ baseCurrency }: FormValues) => {
+    await mutateAsync({
+      operation: DatabaseMutationOperation.Upsert,
+      tableName: TableNames.CONFIGS,
+      identifierColumn: "pubKeyHex",
+      columnDataMap: {
+        pubKeyHex,
+        baseCurrency,
+        createdAt: getUnixTimestamp(),
       },
-      {
-        onSuccess: async () => {
-          const mutations: GenerateDatabaseMutation[] = [];
+    });
 
-          const transactions = await sqlocal.sql(
-            `SELECT * FROM transactions WHERE deletedAt IS NULL AND pubKeyHex = '${pubKeyHex}'`
-          );
+    const mutations: GenerateDatabaseMutation[] = [];
 
-          for (const transaction of transactions) {
-            mutations.push({
-              operation: DatabaseMutationOperation.Upsert,
-              tableName: TableNames.TRANSACTIONS,
-              columnDataMap: {
-                ...transaction,
-                currency: baseCurrency,
-                baseAmount: transaction.amount,
-                updatedAt: getUnixTimestamp(),
-              },
-            });
-          }
-
-          const recurringTransactions = await sqlocal.sql(
-            `SELECT * FROM recurringTransactions WHERE deletedAt IS NULL AND pubKeyHex = '${pubKeyHex}'`
-          );
-
-          for (const recurringTransaction of recurringTransactions) {
-            mutations.push({
-              operation: DatabaseMutationOperation.Upsert,
-              tableName: TableNames.RECURRING_TRANSACTIONS,
-              columnDataMap: {
-                ...recurringTransaction,
-                currency: baseCurrency,
-                updatedAt: getUnixTimestamp(),
-              },
-            });
-          }
-
-          if (!!mutations.length) {
-            mutate(mutations, {
-              onSuccess: () => {
-                queryClient.invalidateQueries({
-                  queryKey: [QueryKeys.GET_CONFIG, pubKeyHex],
-                });
-              },
-            });
-          } else {
-            queryClient.invalidateQueries({
-              queryKey: [QueryKeys.GET_CONFIG, pubKeyHex],
-            });
-          }
-        },
-      }
+    const transactions = await sqlocal.sql(
+      `SELECT * FROM transactions WHERE deletedAt IS NULL AND pubKeyHex = '${pubKeyHex}'`
     );
+
+    for (const transaction of transactions) {
+      mutations.push({
+        operation: DatabaseMutationOperation.Upsert,
+        tableName: TableNames.TRANSACTIONS,
+        columnDataMap: {
+          ...transaction,
+          currency: baseCurrency,
+          baseAmount: transaction.amount,
+          updatedAt: getUnixTimestamp(),
+        },
+      });
+    }
+
+    const recurringTransactions = await sqlocal.sql(
+      `SELECT * FROM recurringTransactions WHERE deletedAt IS NULL AND pubKeyHex = '${pubKeyHex}'`
+    );
+
+    for (const recurringTransaction of recurringTransactions) {
+      mutations.push({
+        operation: DatabaseMutationOperation.Upsert,
+        tableName: TableNames.RECURRING_TRANSACTIONS,
+        columnDataMap: {
+          ...recurringTransaction,
+          currency: baseCurrency,
+          updatedAt: getUnixTimestamp(),
+        },
+      });
+    }
+
+    await mutateAsync(mutations);
+
+    await handleFullServerSync();
+
+    queryClient.invalidateQueries({
+      queryKey: [QueryKeys.GET_CONFIG, pubKeyHex],
+    });
   };
 
   return (
@@ -111,7 +102,7 @@ export const ConfigModalForm = () => {
         confirmModalProps={{
           enabled: true,
           header: "are you sure? no changes in the future!",
-          isLoading: isPending,
+          isLoading: isPending || isLoading,
         }}
       >
         <CurrencyPicker name="baseCurrency" label="base currency" />

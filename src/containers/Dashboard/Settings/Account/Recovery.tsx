@@ -1,28 +1,11 @@
-import {
-  DatabaseMutationOperation,
-  type GenerateDatabaseMutation,
-  sqlocal,
-  useDatabaseActions,
-  useLofikAccount,
-  useLofikMutation,
-} from "@lofik/react";
-import { type ChangeEvent, useRef, useState } from "react";
-import { getUnixTimestamp } from "../../../../utils/dates";
-import { TableNames } from "../../constants";
+import { useDatabaseActions } from "@lofik/react";
+import { type ChangeEvent, useRef } from "react";
+import { useFullServerSync } from "../../../../hooks/useFullServerSync";
 import styles from "../styles.module.css";
 
 export const Recovery = () => {
-  const [isServerSyncing, setIsServerSyncing] = useState(false);
-  const { pubKeyHex } = useLofikAccount();
   const { exportDatabase, importDatabase } = useDatabaseActions();
-
-  const { mutateAsync } = useLofikMutation({
-    shouldSync: true,
-    isFullSync: true,
-    onSuccess: () => {
-      setIsServerSyncing(false);
-    },
-  });
+  const { handleFullServerSync, isLoading } = useFullServerSync();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -36,78 +19,6 @@ export const Recovery = () => {
     await importDatabase(file);
 
     location.reload();
-  };
-
-  const handleServerSync = async () => {
-    setIsServerSyncing(true);
-
-    const configs = await sqlocal.sql(
-      `SELECT * FROM configs WHERE pubKeyHex = '${pubKeyHex} AND deletedAt IS NULL'`
-    );
-
-    const configsMutations: GenerateDatabaseMutation[] = configs.map(
-      (config) => ({
-        operation: DatabaseMutationOperation.Upsert,
-        tableName: TableNames.CONFIGS,
-        columnDataMap: {
-          ...config,
-          updatedAt: getUnixTimestamp(),
-        },
-      })
-    );
-
-    const categories = await sqlocal.sql(
-      `SELECT * FROM categories WHERE pubKeyHex = '${pubKeyHex}' AND deletedAt IS NULL`
-    );
-
-    const categoriesMutations: GenerateDatabaseMutation[] = categories.map(
-      (category) => ({
-        operation: DatabaseMutationOperation.Upsert,
-        tableName: TableNames.CATEGORIES,
-        columnDataMap: {
-          ...category,
-          updatedAt: getUnixTimestamp(),
-        },
-      })
-    );
-
-    const recurringTransactions = await sqlocal.sql(
-      `SELECT * FROM recurringTransactions WHERE pubKeyHex = '${pubKeyHex}' AND deletedAt IS NULL`
-    );
-
-    const recurringTransactionsMutations: GenerateDatabaseMutation[] =
-      recurringTransactions.map((recurringTransaction) => ({
-        operation: DatabaseMutationOperation.Upsert,
-        tableName: TableNames.RECURRING_TRANSACTIONS,
-        columnDataMap: {
-          ...recurringTransaction,
-          updatedAt: getUnixTimestamp(),
-        },
-      }));
-
-    const transactions = await sqlocal.sql(
-      `SELECT * FROM transactions WHERE pubKeyHex = '${pubKeyHex}' AND deletedAt IS NULL`
-    );
-
-    const transactionsMutations: GenerateDatabaseMutation[] = transactions.map(
-      (transaction) => ({
-        operation: DatabaseMutationOperation.Upsert,
-        tableName: TableNames.TRANSACTIONS,
-        columnDataMap: {
-          ...transaction,
-          updatedAt: getUnixTimestamp(),
-        },
-      })
-    );
-
-    const mutations = [
-      ...configsMutations,
-      ...categoriesMutations,
-      ...recurringTransactionsMutations,
-      ...transactionsMutations,
-    ];
-
-    await mutateAsync(mutations);
   };
 
   return (
@@ -129,7 +40,7 @@ export const Recovery = () => {
         full sync with the server (pushes all current transactions and
         categories)
       </p>
-      <button onClick={handleServerSync} disabled={isServerSyncing}>
+      <button onClick={handleFullServerSync} disabled={isLoading}>
         sync
       </button>
     </div>
