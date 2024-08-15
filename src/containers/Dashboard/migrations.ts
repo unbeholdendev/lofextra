@@ -6,6 +6,7 @@ enum Migrations {
   CategoriesSortColumn = "CategoriesSortColumn",
   RecurringTransactions = "RecurringTransactions",
   Currencies = "Currencies",
+  ForeignKeysCleanup = "ForeignKeysCleanup",
 }
 
 const findMigration = async (sqlocal: SQLocal, migration: Migrations) => {
@@ -72,7 +73,7 @@ const recurringTransactionsMigration = async (sqlocal: SQLocal) => {
 
   await sqlocal.transaction(async (tx) => {
     await tx.sql(
-      "CREATE TABLE recurringTransactions (id VARCHAR(40) PRIMARY KEY, title TEXT NOT NULL, amount REAL NOT NULL, currency TEXT DEFAULT 'USD', categoryId VARCHAR(40), repeatDay INTEGER NOT NULL, repeatInterval TEXT NOT NULL CHECK(repeatInterval IN ('month')), pubKeyHex TEXT NOT NULL, deletedAt INTEGER, updatedAt INTEGER NOT NULL, createdAt INTEGER NOT NULL, FOREIGN KEY (categoryId) REFERENCES categories(id))"
+      "CREATE TABLE recurringTransactions (id VARCHAR(40) PRIMARY KEY, title TEXT NOT NULL, amount REAL NOT NULL, currency TEXT DEFAULT 'USD', categoryId VARCHAR(40), repeatDay INTEGER NOT NULL, repeatInterval TEXT NOT NULL CHECK(repeatInterval IN ('month')), pubKeyHex TEXT NOT NULL, deletedAt INTEGER, updatedAt INTEGER NOT NULL, createdAt INTEGER NOT NULL)"
     );
 
     await tx.sql(
@@ -82,16 +83,6 @@ const recurringTransactionsMigration = async (sqlocal: SQLocal) => {
     await tx.sql(
       "ALTER TABLE transactions ADD COLUMN recurringTransactionIndex INTEGER"
     );
-
-    await tx.sql(
-      "CREATE TABLE transactionsNew (id VARCHAR(40) PRIMARY KEY, title TEXT NOT NULL, amount REAL NOT NULL, currency TEXT DEFAULT 'USD', pubKeyHex TEXT NOT NULL, categoryId VARCHAR(40), deletedAt INTEGER, updatedAt INTEGER NOT NULL, createdAt INTEGER NOT NULL, recurringTransactionId VARCHAR(40), recurringTransactionIndex INTEGER, FOREIGN KEY (recurringTransactionId) REFERENCES recurringTransactions(id))"
-    );
-
-    await tx.sql("INSERT INTO transactionsNew SELECT * FROM transactions");
-
-    await tx.sql("DROP TABLE transactions");
-
-    await tx.sql("ALTER TABLE transactionsNew RENAME TO transactions");
 
     await createMigration(tx.sql, Migrations.RecurringTransactions);
   });
@@ -119,8 +110,47 @@ const currenciesMigration = async (sqlocal: SQLocal) => {
   });
 };
 
+const foreignKeysCleanupMigration = async (sqlocal: SQLocal) => {
+  const migration = await findMigration(sqlocal, Migrations.ForeignKeysCleanup);
+
+  if (migration) {
+    return;
+  }
+
+  await sqlocal.transaction(async (tx) => {
+    await tx.sql(
+      "CREATE TABLE transactionsNew (id VARCHAR(40) PRIMARY KEY, title TEXT NOT NULL, amount REAL NOT NULL, currency TEXT DEFAULT 'USD', pubKeyHex TEXT NOT NULL, categoryId VARCHAR(40), deletedAt INTEGER, updatedAt INTEGER NOT NULL, createdAt INTEGER NOT NULL, recurringTransactionId VARCHAR(40), recurringTransactionIndex INTEGER, baseAmount REAL)"
+    );
+
+    await tx.sql("INSERT INTO transactionsNew SELECT * FROM transactions");
+
+    await tx.sql("DROP TABLE transactions");
+
+    await tx.sql("ALTER TABLE transactionsNew RENAME TO transactions");
+
+    //
+
+    await tx.sql(
+      "CREATE TABLE recurringTransactionsNew (id VARCHAR(40) PRIMARY KEY, title TEXT NOT NULL, amount REAL NOT NULL, currency TEXT DEFAULT 'USD', categoryId VARCHAR(40), repeatDay INTEGER NOT NULL, repeatInterval TEXT NOT NULL CHECK(repeatInterval IN ('month')), pubKeyHex TEXT NOT NULL, deletedAt INTEGER, updatedAt INTEGER NOT NULL, createdAt INTEGER NOT NULL)"
+    );
+
+    await tx.sql(
+      "INSERT INTO recurringTransactionsNew SELECT * FROM recurringTransactions"
+    );
+
+    await tx.sql("DROP TABLE recurringTransactions");
+
+    await tx.sql(
+      "ALTER TABLE recurringTransactionsNew RENAME TO recurringTransactions"
+    );
+
+    await createMigration(tx.sql, Migrations.ForeignKeysCleanup);
+  });
+};
+
 export const runMigrations = async (sqlocal: SQLocal) => {
   await categoriesSortColumnMigration(sqlocal);
   await recurringTransactionsMigration(sqlocal);
   await currenciesMigration(sqlocal);
+  await foreignKeysCleanupMigration(sqlocal);
 };

@@ -41,6 +41,21 @@ export const Recovery = () => {
   const handleServerSync = async () => {
     setIsServerSyncing(true);
 
+    const configs = await sqlocal.sql(
+      `SELECT * FROM configs WHERE pubKeyHex = '${pubKeyHex} AND deletedAt IS NULL'`
+    );
+
+    const configsMutations: GenerateDatabaseMutation[] = configs.map(
+      (config) => ({
+        operation: DatabaseMutationOperation.Upsert,
+        tableName: TableNames.CONFIGS,
+        columnDataMap: {
+          ...config,
+          updatedAt: getUnixTimestamp(),
+        },
+      })
+    );
+
     const categories = await sqlocal.sql(
       `SELECT * FROM categories WHERE pubKeyHex = '${pubKeyHex}' AND deletedAt IS NULL`
     );
@@ -86,6 +101,7 @@ export const Recovery = () => {
     );
 
     const mutations = [
+      ...configsMutations,
       ...categoriesMutations,
       ...recurringTransactionsMutations,
       ...transactionsMutations,
