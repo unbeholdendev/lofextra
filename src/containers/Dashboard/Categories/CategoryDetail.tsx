@@ -1,7 +1,7 @@
 import { useLofikAccount, useLofikQuery } from "@lofik/react";
 import { getRouteApi, useRouter } from "@tanstack/react-router";
-import { QueryKeys } from "../../../queries";
 import { categoriesSchema } from "../../../validators/validators";
+import { QueryKeys } from "../constants";
 import { routes } from "../routes";
 import { CategoryDelete } from "./CategoryDelete";
 import { CategoryForm } from "./CategoryForm";
@@ -23,7 +23,7 @@ export const CategoryDetail = () => {
         AND id = '${params.id}'
       `,
     schema: categoriesSchema,
-    queryKey: [QueryKeys.GET_CATEGORY, pubKeyHex],
+    queryKey: [QueryKeys.GET_CATEGORY, pubKeyHex, params.id],
     enabled: !!params.id,
   });
 

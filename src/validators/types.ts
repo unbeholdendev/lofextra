@@ -1,6 +1,7 @@
 import { type TypeOf } from "zod";
 import {
   categorySchema,
+  configSchema,
   recurringTransactionSchema,
   transactionSchema,
 } from "./validators";
@@ -13,3 +14,5 @@ export enum RecurringTransactionRepeatInterval {
 }
 
 export type RecurringTransaction = TypeOf<typeof recurringTransactionSchema>;
+
+export type Config = TypeOf<typeof configSchema>;

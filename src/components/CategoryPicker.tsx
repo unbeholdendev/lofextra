@@ -1,7 +1,8 @@
 import { useLofikAccount, useLofikQuery } from "@lofik/react";
-import { useFormContext } from "react-hook-form";
-import { QueryKeys } from "../queries";
+import { useMemo } from "react";
+import { QueryKeys } from "../containers/Dashboard/constants";
 import { categoriesSchema } from "../validators/validators";
+import { Select } from "./Select";
 
 type Props = {
   name: string;
@@ -9,6 +10,7 @@ type Props = {
   React.SelectHTMLAttributes<HTMLSelectElement>,
   HTMLSelectElement
 >;
+
 export const CategoryPicker = ({ name, ...props }: Props) => {
   const { pubKeyHex } = useLofikAccount();
 
@@ -23,21 +25,18 @@ export const CategoryPicker = ({ name, ...props }: Props) => {
     queryKey: [QueryKeys.GET_CATEGORIES, pubKeyHex],
   });
 
-  const { register } = useFormContext();
+  const options = useMemo(
+    () => data?.map(({ title, id }) => ({ label: title, value: id })),
+    [data]
+  );
 
   return (
-    <label>
-      {"category"}
-
-      <select {...register(name)} {...props}>
-        <option value={""}>{"<category>"}</option>
-
-        {data?.map((category) => (
-          <option key={category.id} value={category.id}>
-            {category.title}
-          </option>
-        ))}
-      </select>
-    </label>
+    <Select
+      name={name}
+      options={options}
+      label="category"
+      emptyLabel="<category>"
+      {...props}
+    />
   );
 };

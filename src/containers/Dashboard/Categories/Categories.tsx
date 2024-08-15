@@ -12,9 +12,9 @@ import {
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import type { TypeOf } from "zod";
-import { QueryKeys } from "../../../queries";
 import { arrayMove } from "../../../utils/array";
 import { categoriesSchema } from "../../../validators/validators";
+import { QueryKeys, TableNames } from "../constants";
 import { routes } from "../routes";
 import { Category } from "./Category";
 import styles from "./styles.module.css";
@@ -71,7 +71,7 @@ export const Categories = () => {
 
     mutate({
       operation: DatabaseMutationOperation.Sort,
-      tableName: "categories",
+      tableName: TableNames.CATEGORIES,
       identifierValue: draggableId,
       order: oldSortOrder > newSortOrder ? newSortOrder : newSortOrder + 1,
     });

@@ -71,3 +71,12 @@
 .header-margin-bottom {
   margin-bottom: 1rem;
 }
+
+.flex-vertical-center {
+  display: flex;
+  align-items: center;
+}
+
+.margin-right-small {
+  margin-right: 0.5rem;
+}

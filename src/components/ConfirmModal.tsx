@@ -17,17 +17,17 @@ export const ConfirmModal = ({
 }: Props) => (
   <Modal
     onClose={onCancel}
-    header={<strong>{header || "Are you sure?"}</strong>}
+    header={<strong>{header || "are you sure?"}</strong>}
   >
     <div className={styles.content}>{children}</div>
 
     <div className={styles["flex-container"]}>
       <button className={`contrast ${styles.flex}`} onClick={onCancel}>
-        No
+        no
       </button>
 
       <button className={styles.flex} onClick={onConfirm}>
-        Yes
+        yes
       </button>
     </div>
   </Modal>

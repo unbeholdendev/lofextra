@@ -7,8 +7,9 @@ import {
   useLofikMutation,
 } from "@lofik/react";
 import { type ChangeEvent, useRef, useState } from "react";
-import { getUnixTimestamp } from "../../../utils/dates";
-import styles from "./styles.module.css";
+import { getUnixTimestamp } from "../../../../utils/dates";
+import { TableNames } from "../../constants";
+import styles from "../styles.module.css";
 
 export const Recovery = () => {
   const [isServerSyncing, setIsServerSyncing] = useState(false);
@@ -45,7 +46,7 @@ export const Recovery = () => {
     const categoriesMutations: GenerateDatabaseMutation[] = categories.map(
       (category) => ({
         operation: DatabaseMutationOperation.Upsert,
-        tableName: "categories",
+        tableName: TableNames.CATEGORIES,
         columnDataMap: {
           ...category,
           updatedAt: getUnixTimestamp(),
@@ -60,7 +61,7 @@ export const Recovery = () => {
     const recurringTransactionsMutations: GenerateDatabaseMutation[] =
       recurringTransactions.map((recurringTransaction) => ({
         operation: DatabaseMutationOperation.Upsert,
-        tableName: "recurringTransactions",
+        tableName: TableNames.RECURRING_TRANSACTIONS,
         columnDataMap: {
           ...recurringTransaction,
           updatedAt: getUnixTimestamp(),
@@ -74,7 +75,7 @@ export const Recovery = () => {
     const transactionsMutations: GenerateDatabaseMutation[] = transactions.map(
       (transaction) => ({
         operation: DatabaseMutationOperation.Upsert,
-        tableName: "transactions",
+        tableName: TableNames.TRANSACTIONS,
         columnDataMap: {
           ...transaction,
           updatedAt: getUnixTimestamp(),
@@ -93,7 +94,6 @@ export const Recovery = () => {
 
   return (
     <div>
-      <h3>recovery</h3>
       <p>download all your data in a single database file</p>
       <button onClick={() => exportDatabase("lofextra.sqlite3")}>export</button>
 

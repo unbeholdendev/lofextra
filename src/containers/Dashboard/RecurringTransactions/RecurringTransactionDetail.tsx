@@ -1,7 +1,7 @@
 import { useLofikAccount, useLofikQuery } from "@lofik/react";
 import { getRouteApi, useRouter } from "@tanstack/react-router";
-import { QueryKeys } from "../../../queries";
 import { recurringTransactionsSchema } from "../../../validators/validators";
+import { QueryKeys } from "../constants";
 import { routes } from "../routes";
 import { RecurringTransactionDelete } from "./RecurringTransactionDelete";
 import { RecurringTransactionForm } from "./RecurringTransactionForm";
@@ -23,7 +23,7 @@ export const RecurringTransactionDetail = () => {
         AND id = '${params.id}'
       `,
     schema: recurringTransactionsSchema,
-    queryKey: [QueryKeys.GET_RECURRING_TRANSACTION, pubKeyHex],
+    queryKey: [QueryKeys.GET_RECURRING_TRANSACTION, pubKeyHex, params.id],
     enabled: !!params.id,
   });
 

@@ -1,10 +1,10 @@
 import { useLofikAccount, useLofikQuery } from "@lofik/react";
 import { useMemo } from "react";
-import { QueryKeys } from "../../../queries";
+import { useFormatCurrency } from "../../../hooks/useFormatCurrency";
 import { getDateFromTimestamp } from "../../../utils/dates";
-import { formatNumber } from "../../../utils/formatters";
 import { type Transaction as TransactionType } from "../../../validators/types";
 import { categoriesSchema } from "../../../validators/validators";
+import { QueryKeys } from "../constants";
 import styles from "./styles.module.css";
 
 type Props = {
@@ -13,6 +13,7 @@ type Props = {
 };
 export const TransactionRow = ({ transaction, onDetailClick }: Props) => {
   const { pubKeyHex } = useLofikAccount();
+  const { formatCurrency } = useFormatCurrency();
 
   const { data } = useLofikQuery({
     sql: `
@@ -48,8 +49,18 @@ export const TransactionRow = ({ transaction, onDetailClick }: Props) => {
       </div>
 
       <div className={styles["transaction-row-right"]}>
-        <p className={styles["margin-bottom"]}>
-          <strong>{formatNumber(transaction.amount)}</strong>
+        <p
+          className={`${styles["margin-bottom"]} ${styles["flex-vertical-center"]}`}
+        >
+          {transaction.amount !== transaction.baseAmount && (
+            <span className={`${styles["margin-right-small"]} ${styles.small}`}>
+              {formatCurrency(transaction.baseAmount)}
+            </span>
+          )}
+
+          <strong>
+            {formatCurrency(transaction.amount, transaction.currency)}
+          </strong>
         </p>
 
         <p className={`${styles["margin-bottom"]} ${styles.small}`}>

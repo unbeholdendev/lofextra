@@ -57,3 +57,12 @@
   flex-direction: column;
   align-items: flex-end;
 }
+
+.flex-vertical-center {
+  display: flex;
+  align-items: center;
+}
+
+.margin-right-small {
+  margin-right: 0.5rem;
+}

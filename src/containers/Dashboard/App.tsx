@@ -10,10 +10,10 @@ import {
   ScrollRestoration,
   useLocation,
 } from "@tanstack/react-router";
-import { Account } from "./Account/Account";
 import { Categories } from "./Categories/Categories";
 import { CategoryCreate } from "./Categories/CategoryCreate";
 import { CategoryDetail } from "./Categories/CategoryDetail";
+import { ConfigProvider } from "./Config/ConfigContext";
 import { Dashboard } from "./Dashboard";
 import { handleRecurringTransactions } from "./handleRecurringTransactions";
 import { runMigrations } from "./migrations";
@@ -21,10 +21,13 @@ import { RecurringTransactionCreate } from "./RecurringTransactions/RecurringTra
 import { RecurringTransactionDetail } from "./RecurringTransactions/RecurringTransactionDetail";
 import { RecurringTransactions } from "./RecurringTransactions/RecurringTransactions";
 import { routes } from "./routes";
+import { Settings } from "./Settings/Settings";
 import { Statistics } from "./Statistics/Statistics";
 import styles from "./styles.module.css";
 import { TransactionCreate } from "./Transactions/TransactionCreate";
 import { TransactionDetail } from "./Transactions/TransactionDetail";
+
+const loader = <div aria-busy="true" />;
 
 const SubMenuLinks = () => {
   const location = useLocation();
@@ -57,12 +60,12 @@ const SubMenuLinks = () => {
 
       <li>
         <Link
-          to={routes.ACCOUNT}
+          to={routes.SETTINGS}
           className={
-            location.pathname === routes.ACCOUNT ? "contrast" : "primary"
+            location.pathname === routes.SETTINGS ? "contrast" : "primary"
           }
         >
-          account
+          settings
         </Link>
       </li>
     </>
@@ -127,7 +130,7 @@ const rootRoute = createRootRoute({
         </header>
 
         <LofikProvider
-          loader={<div aria-busy="true" />}
+          loader={loader}
           databaseInit={[
             "CREATE TABLE IF NOT EXISTS categories (id VARCHAR(40) PRIMARY KEY, title TEXT NOT NULL, pubKeyHex TEXT NOT NULL, deletedAt INTEGER, updatedAt INTEGER NOT NULL, createdAt INTEGER NOT NULL)",
             "CREATE TABLE IF NOT EXISTS transactions (id VARCHAR(40) PRIMARY KEY, title TEXT NOT NULL, amount REAL NOT NULL, currency TEXT DEFAULT 'USD', pubKeyHex TEXT NOT NULL, categoryId VARCHAR(40), deletedAt INTEGER, updatedAt INTEGER NOT NULL, createdAt INTEGER NOT NULL)",
@@ -138,10 +141,12 @@ const rootRoute = createRootRoute({
           runMigrations={runMigrations}
           onInitialRemoteUpdatesReceived={handleRecurringTransactions}
         >
-          <section className={styles.section}>
-            <ScrollRestoration />
-            <Outlet />
-          </section>
+          <ConfigProvider loader={loader}>
+            <section className={styles.section}>
+              <ScrollRestoration />
+              <Outlet />
+            </section>
+          </ConfigProvider>
         </LofikProvider>
       </>
     );
@@ -166,10 +171,10 @@ const categoriesRoute = createRoute({
   component: Categories,
 });
 
-const accountRoute = createRoute({
+const settingsRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: routes.ACCOUNT,
-  component: Account,
+  path: routes.SETTINGS,
+  component: Settings,
 });
 
 const transactionDetailRoute = createRoute({
@@ -220,7 +225,7 @@ const routeTree = rootRoute.addChildren([
   categoriesRoute,
   categoryDetailRoute,
   categoryCreateRoute,
-  accountRoute,
+  settingsRoute,
   transactionDetailRoute,
   transactionCreateRoute,
   recurringTransactionsRoute,

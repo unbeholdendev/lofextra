@@ -4,7 +4,7 @@ export const routes = {
   CATEGORIES: "/categories",
   CATEGORY_DETAIL: "/categories/$id",
   CATEGORY_CREATE: "/categories/create",
-  ACCOUNT: "/account",
+  SETTINGS: "/settings",
   TRANSACTION_DETAIL: "/transactions/$id",
   TRANSACTION_CREATE: "/transactions/create",
   RECURRING_TRANSACTIONS: "/recurring-transactions",

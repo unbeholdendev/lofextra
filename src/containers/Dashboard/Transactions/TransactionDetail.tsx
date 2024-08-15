@@ -1,7 +1,7 @@
 import { useLofikAccount, useLofikQuery } from "@lofik/react";
 import { getRouteApi, useRouter } from "@tanstack/react-router";
-import { QueryKeys } from "../../../queries";
 import { transactionsSchema } from "../../../validators/validators";
+import { QueryKeys } from "../constants";
 import { routes } from "../routes";
 import { TransactionDetailHeader } from "./TransactionDetailHeader";
 import { TransactionForm } from "./TransactionForm";
@@ -22,7 +22,7 @@ export const TransactionDetail = () => {
         AND id = '${params.id}'
       `,
     schema: transactionsSchema,
-    queryKey: [QueryKeys.GET_TRANSACTION, pubKeyHex],
+    queryKey: [QueryKeys.GET_TRANSACTION, pubKeyHex, params.id],
     enabled: !!params.id,
   });
 

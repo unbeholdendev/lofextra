@@ -2,14 +2,14 @@ import { useLofikAccount, useLofikQuery } from "@lofik/react";
 import { useMemo, useState } from "react";
 import { z } from "zod";
 import { useDebounce } from "../../../hooks/useDebounce";
-import { QueryKeys } from "../../../queries";
+import { useFormatCurrency } from "../../../hooks/useFormatCurrency";
 import {
   getEndOfDay,
   getEndOfMonth,
   getStartOfMonth,
   getTimestampAfterSubtractingDays,
 } from "../../../utils/dates";
-import { formatNumber } from "../../../utils/formatters";
+import { QueryKeys } from "../constants";
 import { StatisticsDetailModal } from "./StatisticsDetailModal";
 import styles from "./styles.module.css";
 
@@ -30,6 +30,7 @@ const currentDateFormatted = `${currentYear}-${currentMonthFormatted}-${currentD
 
 export const Statistics = () => {
   const { pubKeyHex } = useLofikAccount();
+  const { formatCurrency } = useFormatCurrency();
   const [statsInterval, setStatsInterval] = useState(DAYS_AGO_30_TS);
   const [monthInterval, setMonthInterval] = useState(
     `${currentYear}-${currentMonthFormatted}`
@@ -65,7 +66,7 @@ export const Statistics = () => {
   const { data } = useLofikQuery({
     sql: `
         SELECT 
-          SUM(amount) AS categoryTotal, 
+          SUM(baseAmount) AS categoryTotal, 
           COALESCE(c.title, '<no category>') AS categoryTitle, 
           COALESCE(c.id, '-1') AS categoryId 
         FROM transactions t 
@@ -185,7 +186,7 @@ export const Statistics = () => {
 
       <div className={styles.scroll}>
         <p className={styles.large}>
-          total in period: <strong>{formatNumber(totalInPeriod)}</strong>
+          total in period: <strong>{formatCurrency(totalInPeriod)}</strong>
         </p>
 
         {data?.map(({ categoryTotal, categoryTitle, categoryId }) => (
@@ -194,7 +195,7 @@ export const Statistics = () => {
             className={styles["statistics-row"]}
             onClick={() => setDetailCategoryId(categoryId)}
           >
-            {categoryTitle}: <strong>{formatNumber(categoryTotal)}</strong>{" "}
+            {categoryTitle}: <strong>{formatCurrency(categoryTotal)}</strong>{" "}
             <span className={styles.small}>
               (
               {(categoryTotal / totalInPeriod).toLocaleString(undefined, {

@@ -1,9 +1,9 @@
 import { useLofikAccount, useLofikAccountActions } from "@lofik/react";
 import { type UseFormReturn } from "react-hook-form";
-import { Form } from "../../../components/Form";
-import { CopyIcon } from "../../../components/icons/Copy";
-import { Input } from "../../../components/Input";
-import styles from "./styles.module.css";
+import { Form } from "../../../../components/Form";
+import { CopyIcon } from "../../../../components/icons/Copy";
+import { Input } from "../../../../components/Input";
+import styles from "../styles.module.css";
 
 type FormValues = {
   mnemonic: string;
@@ -25,6 +25,8 @@ export const Mnemonic = () => {
 
   return (
     <Form onSubmit={onSubmit} defaultValues={{ mnemonic: "" }}>
+      <h3>recovery</h3>
+
       <p>your mnemonic:</p>
 
       <p>

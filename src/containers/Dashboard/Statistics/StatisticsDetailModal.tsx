@@ -1,11 +1,11 @@
 import { useLofikAccount, useLofikQuery } from "@lofik/react";
 import { useState } from "react";
 import { Modal } from "../../../components/Modal";
-import { QueryKeys } from "../../../queries";
+import { useFormatCurrency } from "../../../hooks/useFormatCurrency";
 import { getDateFromTimestamp } from "../../../utils/dates";
-import { formatNumber } from "../../../utils/formatters";
 import type { Transaction } from "../../../validators/types";
 import { transactionsSchema } from "../../../validators/validators";
+import { QueryKeys } from "../constants";
 import { TransactionFormModal } from "../Transactions/TransactionFormModal";
 import styles from "./styles.module.css";
 
@@ -27,6 +27,7 @@ export const StatisticsDetailModal = ({
   onClose,
 }: Props) => {
   const { pubKeyHex } = useLofikAccount();
+  const { formatCurrency } = useFormatCurrency();
   const [modalTransaction, setModalTransaction] = useState<Transaction | null>(
     null
   );
@@ -68,7 +69,7 @@ export const StatisticsDetailModal = ({
           <div>
             <strong className={styles.large}>{categoryTitle}</strong>{" "}
             <span className={styles.large}>
-              ({formatNumber(categoryTotal)})
+              ({formatCurrency(categoryTotal)})
             </span>
           </div>
         }
@@ -85,11 +86,22 @@ export const StatisticsDetailModal = ({
               </p>
 
               <div className={styles["transaction-column"]}>
-                <p className={styles["margin-bottom"]}>
-                  <strong>{formatNumber(transaction.amount)}</strong>{" "}
+                <p
+                  className={`${styles["margin-bottom"]} ${styles["flex-vertical-center"]}`}
+                >
+                  {transaction.amount !== transaction.baseAmount && (
+                    <span
+                      className={`${styles["margin-right-small"]} ${styles.small}`}
+                    >
+                      {formatCurrency(transaction.baseAmount)}
+                    </span>
+                  )}
+                  <strong>
+                    {formatCurrency(transaction.amount, transaction.currency)}
+                  </strong>{" "}
                   <span className={styles.small}>
                     (
-                    {(transaction.amount / categoryTotal).toLocaleString(
+                    {(transaction.baseAmount / categoryTotal).toLocaleString(
                       undefined,
                       {
                         style: "percent",

@@ -6,26 +6,24 @@ import {
 } from "@lofik/react";
 import Mexp from "math-expression-evaluator";
 import { z, type TypeOf } from "zod";
+import { AmountInput } from "../../../components/AmountInput";
 import { CategoryPicker } from "../../../components/CategoryPicker";
+import { CurrencyPicker } from "../../../components/CurrencyPicker";
 import { Form } from "../../../components/Form";
 import { Input } from "../../../components/Input";
-import { useRefetchQueries } from "../../../hooks/useRefetchQueries";
+import { SatsCheckbox } from "../../../components/SatsCheckbox";
 import { getUnixTimestamp } from "../../../utils/dates";
 import {
   RecurringTransactionRepeatInterval,
   type RecurringTransaction,
 } from "../../../validators/types";
+import { useConfigContext } from "../Config/ConfigContext";
+import { SATS_IN_BTC, TableNames } from "../constants";
 import styles from "./styles.module.css";
 
 export type FormRecurringTransaction = Omit<
   RecurringTransaction,
-  | "id"
-  | "amount"
-  | "pubKeyHex"
-  | "currency"
-  | "updatedAt"
-  | "deletedAt"
-  | "createdAt"
+  "id" | "amount" | "pubKeyHex" | "updatedAt" | "deletedAt" | "createdAt"
 > & { id: string | null; amount: number | null; createdAt: number | null };
 
 type Props = {
@@ -35,14 +33,16 @@ type Props = {
 };
 
 const schema = z.object({
-  title: z.string().min(1),
+  title: z.string(),
   amount: z.string(),
   categoryId: z.string().nullable(),
+  currency: z.string(),
   repeatDay: z
     .number()
     .gte(1, "Must be 1 of greater")
     .lte(28, "Must be 28 or lower"),
   repeatInterval: z.nativeEnum(RecurringTransactionRepeatInterval),
+  inputSats: z.boolean().optional(),
 });
 
 type FormValues = TypeOf<typeof schema>;
@@ -55,15 +55,11 @@ export const RecurringTransactionForm = ({
   onCancel,
 }: Props) => {
   const { pubKeyHex } = useLofikAccount();
+  const { inputSats } = useConfigContext();
 
-  const refetchQueries = useRefetchQueries();
   const { mutate } = useLofikMutation({
     shouldSync: true,
-    onSuccess: () => {
-      refetchQueries();
-
-      onSuccess?.();
-    },
+    onSuccess,
   });
 
   const onSubmit = ({
@@ -72,6 +68,8 @@ export const RecurringTransactionForm = ({
     amount,
     repeatDay,
     repeatInterval,
+    currency,
+    inputSats,
   }: FormValues) => {
     let amountEval: number;
 
@@ -83,15 +81,20 @@ export const RecurringTransactionForm = ({
       return;
     }
 
+    const adjustedAmount = Math.abs(
+      currency === "BTC" && inputSats ? amountEval / SATS_IN_BTC : amountEval
+    );
+
     mutate({
       operation: DatabaseMutationOperation.Upsert,
-      tableName: "recurringTransactions",
+      tableName: TableNames.RECURRING_TRANSACTIONS,
       columnDataMap: {
         id: recurringTransaction.id || crypto.randomUUID(),
         title,
-        amount: Math.abs(amountEval),
+        amount: adjustedAmount,
         pubKeyHex,
         categoryId: categoryId || null,
+        currency,
         repeatDay,
         repeatInterval,
         deletedAt: null,
@@ -104,38 +107,51 @@ export const RecurringTransactionForm = ({
     <Form<FormValues>
       onSubmit={onSubmit}
       resolver={zodResolver(schema)}
-      values={{
+      defaultValues={{
         categoryId: recurringTransaction.categoryId,
         title: recurringTransaction.title,
-        amount: recurringTransaction.amount?.toString() ?? "",
+        amount:
+          (recurringTransaction.currency === "BTC" &&
+          !inputSats &&
+          !!recurringTransaction.amount
+            ? recurringTransaction.amount * SATS_IN_BTC
+            : recurringTransaction.amount
+          )?.toString() ?? "",
         repeatDay: recurringTransaction.repeatDay,
         repeatInterval: recurringTransaction.repeatInterval,
+        currency: recurringTransaction.currency,
+        inputSats: !!inputSats,
       }}
       confirmModalProps={
         !recurringTransaction.id
           ? {
               enabled: true,
               children:
-                "You'll only be able to update title, amount and category after creating.",
+                "You won't be able to change repeat day and interval after creating.",
             }
           : undefined
       }
     >
       <fieldset>
-        <Input name="title" placeholder="title" aria-label="title" />
+        <Input
+          name="title"
+          placeholder="title"
+          aria-label="title"
+          autoFocus={!recurringTransaction.title}
+        />
+
+        <CategoryPicker name="categoryId" />
 
         <div role="group">
-          <div className={styles["margin-right"]}>
-            <CategoryPicker name="categoryId" />
+          <div className={`${styles["margin-right"]} ${styles.flex}`}>
+            <AmountInput />
           </div>
 
-          <Input
-            name="amount"
-            placeholder="5+5"
-            aria-label="amount"
-            inputMode="tel"
-            minLength={1}
-          />
+          <div className={styles.flex}>
+            <CurrencyPicker name="currency" />
+          </div>
+
+          <SatsCheckbox />
         </div>
 
         <div role="group">

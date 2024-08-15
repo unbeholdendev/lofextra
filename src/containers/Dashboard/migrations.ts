@@ -1,14 +1,16 @@
 import { sqlocal, type SQLocal } from "@lofik/react";
 import { getUnixTimestamp } from "../../utils/dates";
+import { Currencies } from "./constants";
 
 enum Migrations {
   CategoriesSortColumn = "CategoriesSortColumn",
   RecurringTransactions = "RecurringTransactions",
+  Currencies = "Currencies",
 }
 
 const findMigration = async (sqlocal: SQLocal, migration: Migrations) => {
   const data = await sqlocal.sql(
-    `select * from migrations where name = '${migration}'`
+    `SELECT * FROM migrations WHERE name = '${migration}'`
   );
 
   return data[0];
@@ -58,7 +60,7 @@ const categoriesSortColumnMigration = async (sqlocal: SQLocal) => {
   });
 };
 
-const RecurringTransactionsMigration = async (sqlocal: SQLocal) => {
+const recurringTransactionsMigration = async (sqlocal: SQLocal) => {
   const migration = await findMigration(
     sqlocal,
     Migrations.RecurringTransactions
@@ -95,7 +97,30 @@ const RecurringTransactionsMigration = async (sqlocal: SQLocal) => {
   });
 };
 
+const currenciesMigration = async (sqlocal: SQLocal) => {
+  const migration = await findMigration(sqlocal, Migrations.Currencies);
+
+  if (migration) {
+    return;
+  }
+
+  await sqlocal.transaction(async (tx) => {
+    await tx.sql(
+      `CREATE TABLE configs (pubKeyHex TEXT PRIMARY KEY, baseCurrency VARCHAR(3) NOT NULL, showSats BOOLEAN DEFAULT FALSE, inputSats BOOLEAN DEFAULT FALSE, deletedAt INTEGER, updatedAt INTEGER NOT NULL, createdAt INTEGER NOT NULL, CHECK (baseCurrency IN (${Object.keys(
+        Currencies
+      )
+        .map((code) => `'${code}'`)
+        .join(",")})))`
+    );
+
+    await tx.sql("ALTER TABLE transactions ADD COLUMN baseAmount REAL");
+
+    await createMigration(tx.sql, Migrations.Currencies);
+  });
+};
+
 export const runMigrations = async (sqlocal: SQLocal) => {
   await categoriesSortColumnMigration(sqlocal);
-  await RecurringTransactionsMigration(sqlocal);
+  await recurringTransactionsMigration(sqlocal);
+  await currenciesMigration(sqlocal);
 };

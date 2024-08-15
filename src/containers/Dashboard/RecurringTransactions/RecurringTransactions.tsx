@@ -1,7 +1,7 @@
 import { useLofikAccount, useLofikQuery } from "@lofik/react";
 import { useNavigate } from "@tanstack/react-router";
-import { QueryKeys } from "../../../queries";
 import { recurringTransactionsSchema } from "../../../validators/validators";
+import { QueryKeys } from "../constants";
 import { routes } from "../routes";
 import { RecurringTransactionRow } from "./RecurringTransactionRow";
 import styles from "./styles.module.css";

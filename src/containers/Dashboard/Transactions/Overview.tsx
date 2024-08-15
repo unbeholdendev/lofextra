@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import { formatNumber } from "../../../utils/formatters";
+import { useFormatCurrency } from "../../../hooks/useFormatCurrency";
 import { routes } from "../routes";
 import styles from "./styles.module.css";
 
@@ -9,13 +9,14 @@ type Props = {
 
 export const Overview = ({ total }: Props) => {
   const navigate = useNavigate();
+  const { formatCurrency } = useFormatCurrency();
 
   return (
     <div className={styles.overview}>
       <div>
         <div>spent in last 30 days</div>
         <div className={styles.large}>
-          <strong>{formatNumber(total || 0)}</strong>
+          <strong>{formatCurrency(total || 0)}</strong>
         </div>
       </div>
 

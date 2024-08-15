@@ -1,9 +1,9 @@
 import { useLofikAccount, useLofikQuery } from "@lofik/react";
 import { useMemo } from "react";
-import { QueryKeys } from "../../../queries";
-import { formatNumber } from "../../../utils/formatters";
+import { useFormatCurrency } from "../../../hooks/useFormatCurrency";
 import { type RecurringTransaction } from "../../../validators/types";
 import { categoriesSchema } from "../../../validators/validators";
+import { QueryKeys } from "../constants";
 import styles from "./styles.module.css";
 
 type Props = {
@@ -16,6 +16,7 @@ export const RecurringTransactionRow = ({
   onDetailClick,
 }: Props) => {
   const { pubKeyHex } = useLofikAccount();
+  const { formatCurrency } = useFormatCurrency();
 
   const { data } = useLofikQuery({
     sql: `
@@ -53,7 +54,12 @@ export const RecurringTransactionRow = ({
 
       <div className={styles["transaction-row-right"]}>
         <p className={styles["margin-bottom"]}>
-          <strong>{formatNumber(recurringTransaction.amount)}</strong>
+          <strong>
+            {formatCurrency(
+              recurringTransaction.amount,
+              recurringTransaction.currency
+            )}
+          </strong>
         </p>
 
         <p className={`${styles["margin-bottom"]} ${styles.small}`}>

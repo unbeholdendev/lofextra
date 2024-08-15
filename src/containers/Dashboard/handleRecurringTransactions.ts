@@ -1,12 +1,13 @@
 import {
   DatabaseMutationOperation,
-  queryClient,
   type GenerateDatabaseMutation,
   type SQLocal,
 } from "@lofik/react";
-import { QueryKeys } from "../../queries";
+import { getAmountInCurrency } from "../../utils/currencies/currencies";
 import { getUnixTimestamp } from "../../utils/dates";
+import { refetchQueries } from "../../utils/refetchQueries";
 import type { RecurringTransaction } from "../../validators/types";
+import { TableNames } from "./constants";
 
 export const handleRecurringTransactions = async (
   sqlocal: SQLocal,
@@ -15,6 +16,16 @@ export const handleRecurringTransactions = async (
   mutations: GenerateDatabaseMutation[];
   onSuccess?: () => void;
 }> => {
+  const configs = await sqlocal.sql(
+    `SELECT * FROM configs WHERE pubKeyHex = '${pubKeyHex}' LIMIT 1`
+  );
+
+  const baseCurrency = configs[0]?.baseCurrency;
+
+  if (!baseCurrency) {
+    return { mutations: [] };
+  }
+
   const recurringTransactions: RecurringTransaction[] = await sqlocal.sql(
     `SELECT * FROM recurringTransactions WHERE pubKeyHex = '${pubKeyHex}' AND deletedAt IS NULL`
   );
@@ -22,7 +33,8 @@ export const handleRecurringTransactions = async (
   const mutations: GenerateDatabaseMutation[] = [];
 
   for (const recurringTransaction of recurringTransactions) {
-    const { id, title, amount, categoryId, createdAt } = recurringTransaction;
+    const { id, title, amount, categoryId, createdAt, currency } =
+      recurringTransaction;
 
     const recurringTransactionIndexData = await sqlocal.sql(
       `SELECT MAX(recurringTransactionIndex) AS maxRecurringTransactionIndex FROM transactions WHERE recurringTransactionId = '${id}'`
@@ -47,15 +59,28 @@ export const handleRecurringTransactions = async (
       index++;
 
       if (maxRecurringTransactionIndex < index) {
+        const baseAmount = await getAmountInCurrency({
+          amount,
+          currency,
+          createdAt: iterationTimestamp,
+          baseCurrency,
+        });
+
+        if (!baseAmount) {
+          continue;
+        }
+
         mutations.push({
           operation: DatabaseMutationOperation.Upsert,
-          tableName: "transactions",
+          tableName: TableNames.TRANSACTIONS,
           columnDataMap: {
             id: crypto.randomUUID(),
             title,
             amount,
+            baseAmount,
             pubKeyHex,
             categoryId,
+            currency,
             createdAt: iterationTimestamp,
             recurringTransactionId: id,
             recurringTransactionIndex: index,
@@ -71,10 +96,6 @@ export const handleRecurringTransactions = async (
 
   return {
     mutations,
-    onSuccess: () => {
-      for (const queryKey of Object.keys(QueryKeys)) {
-        queryClient.invalidateQueries({ queryKey: [queryKey] });
-      }
-    },
+    onSuccess: refetchQueries,
   };
 };

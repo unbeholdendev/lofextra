@@ -2,11 +2,11 @@ import { useLofikAccount, useLofikQuery } from "@lofik/react";
 import { useNavigate } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { z } from "zod";
-import { QueryKeys } from "../../queries";
 import { getTimestampAfterSubtractingDays } from "../../utils/dates";
 import { transactionsSchema } from "../../validators/validators";
 import { Overview } from "./Transactions/Overview";
 import { Transactions } from "./Transactions/Transactions";
+import { QueryKeys } from "./constants";
 import { routes } from "./routes";
 
 const DAYS_AGO_30_TS = getTimestampAfterSubtractingDays(30);
@@ -18,7 +18,7 @@ export const Dashboard = () => {
   const { data: totalData } = useLofikQuery({
     sql: `
       SELECT 
-        SUM(amount) AS total 
+        SUM(baseAmount) AS total 
       FROM transactions 
       WHERE 
         pubKeyHex = '${pubKeyHex}' 

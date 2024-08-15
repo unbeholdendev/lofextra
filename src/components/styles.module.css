@@ -10,3 +10,14 @@
 .content {
   margin-bottom: 2rem;
 }
+
+.checkbox {
+  transform: scale(1.5);
+  margin-left: 4px;
+  margin-top: 13px;
+}
+
+.checkbox-wrapper {
+  flex: 0;
+  margin-left: 1rem !important;
+}
