@@ -23,7 +23,7 @@ type FormValues = TypeOf<typeof schema>;
 export const ConfigModalForm = () => {
   const { pubKeyHex } = useLofikAccount();
 
-  const { mutate } = useLofikMutation({
+  const { mutate, isPending } = useLofikMutation({
     shouldSync: true,
   });
 
@@ -77,12 +77,18 @@ export const ConfigModalForm = () => {
           }
 
           if (!!mutations.length) {
-            mutate(mutations);
+            mutate(mutations, {
+              onSuccess: () => {
+                queryClient.invalidateQueries({
+                  queryKey: [QueryKeys.GET_CONFIG, pubKeyHex],
+                });
+              },
+            });
+          } else {
+            queryClient.invalidateQueries({
+              queryKey: [QueryKeys.GET_CONFIG, pubKeyHex],
+            });
           }
-
-          queryClient.invalidateQueries({
-            queryKey: [QueryKeys.GET_CONFIG, pubKeyHex],
-          });
         },
       }
     );
@@ -105,6 +111,7 @@ export const ConfigModalForm = () => {
         confirmModalProps={{
           enabled: true,
           header: "are you sure? no changes in the future!",
+          isLoading: isPending,
         }}
       >
         <CurrencyPicker name="baseCurrency" label="base currency" />

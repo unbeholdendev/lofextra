@@ -18,6 +18,7 @@ type Props<FormValues extends FieldValues> = {
     enabled: boolean;
     header?: string;
     children?: ReactNode;
+    isLoading?: boolean;
   };
 } & UseFormProps<FormValues>;
 
@@ -47,6 +48,7 @@ export const Form = <FormValues extends FieldValues>({
           onCancel={() => setConfirmModal(false)}
           onConfirm={() => onSubmit(methods.getValues(), methods)}
           header={confirmModalProps?.header}
+          isLoading={confirmModalProps?.isLoading}
         >
           {confirmModalProps?.children}
         </ConfirmModal>

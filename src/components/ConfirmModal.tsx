@@ -7,6 +7,7 @@ type Props = {
   onCancel: () => void;
   header?: string;
   children?: ReactNode;
+  isLoading?: boolean;
 };
 
 export const ConfirmModal = ({
@@ -14,6 +15,7 @@ export const ConfirmModal = ({
   onConfirm,
   header,
   children,
+  isLoading,
 }: Props) => (
   <Modal
     onClose={onCancel}
@@ -22,11 +24,15 @@ export const ConfirmModal = ({
     <div className={styles.content}>{children}</div>
 
     <div className={styles["flex-container"]}>
-      <button className={`contrast ${styles.flex}`} onClick={onCancel}>
+      <button
+        className={`contrast ${styles.flex}`}
+        onClick={onCancel}
+        disabled={isLoading}
+      >
         no
       </button>
 
-      <button className={styles.flex} onClick={onConfirm}>
+      <button className={styles.flex} onClick={onConfirm} disabled={isLoading}>
         yes
       </button>
     </div>
