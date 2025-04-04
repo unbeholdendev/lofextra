@@ -149,7 +149,6 @@ export const TransactionForm = ({
           name="title"
           placeholder="title"
           aria-label="title"
-          autoFocus={!transaction.title}
         />
 
         <div role="group">
@@ -164,7 +163,7 @@ export const TransactionForm = ({
 
         <div role="group">
           <div className={`${styles["margin-right"]} ${styles.flex}`}>
-            <AmountInput />
+            <AmountInput autoFocus={!transaction.amount} />
           </div>
 
           <div className={styles.flex}>

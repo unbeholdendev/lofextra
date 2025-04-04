@@ -6,9 +6,10 @@ import { Input } from "./Input";
 
 type Props = {
   name?: string;
+  autoFocus?: boolean;
 };
 
-export const AmountInput = ({ name = "amount" }: Props) => {
+export const AmountInput = ({ name = "amount", autoFocus }: Props) => {
   const { inputSats } = useConfigContext();
   const { setValue, watch } = useFormContext();
 
@@ -38,6 +39,7 @@ export const AmountInput = ({ name = "amount" }: Props) => {
       aria-label={name}
       inputMode="tel"
       minLength={1}
+      autoFocus={autoFocus}
     />
   );
 };
