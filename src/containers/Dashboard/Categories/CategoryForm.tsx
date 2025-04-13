@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   DatabaseMutationOperation,
@@ -30,14 +31,20 @@ const schema = z.object({
 type FormValues = TypeOf<typeof schema>;
 
 export const CategoryForm = ({ category, onSuccess, onCancel }: Props) => {
+  const [isSendLoading, setIsSendLoading] = useState(false);
   const { pubKeyHex } = useLofikAccount();
 
   const { mutate } = useLofikMutation({
     shouldSync: true,
     onSuccess,
+    onSettled: () => {
+      setIsSendLoading(false)
+    },
   });
 
   const onSubmit = async ({ title }: FormValues) => {
+    setIsSendLoading(true);
+
     const categoriesSortOrder = await sqlocal.sql(
       `SELECT MAX(sortOrder) AS 'maxSortOrder' FROM categories WHERE pubKeyHex = '${pubKeyHex}' AND deletedAt IS NULL`
     );
@@ -83,7 +90,7 @@ export const CategoryForm = ({ category, onSuccess, onCancel }: Props) => {
           cancel
         </button>
 
-        <button className={styles.flex} type="submit">
+        <button className={styles.flex} type="submit" disabled={isSendLoading}>
           {category.id ? "save" : "add"}
         </button>
       </div>

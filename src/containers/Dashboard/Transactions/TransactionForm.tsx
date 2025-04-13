@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   DatabaseMutationOperation,
@@ -54,6 +55,7 @@ export const TransactionForm = ({
   onSuccess,
   onCancel,
 }: Props) => {
+  const [isSendLoading, setIsSendLoading] = useState(false);
   const { pubKeyHex } = useLofikAccount();
   const { getAmountInCurrency } = useCurrencies();
   const { inputSats } = useConfigContext();
@@ -65,6 +67,9 @@ export const TransactionForm = ({
 
       onSuccess?.();
     },
+    onSettled: () => {
+      setIsSendLoading(false)  ;
+    }
   });
 
   const onSubmit = async ({
@@ -75,6 +80,8 @@ export const TransactionForm = ({
     currency,
     inputSats,
   }: FormValues) => {
+    setIsSendLoading(true);
+
     let amountEval: number;
 
     try {
@@ -186,6 +193,7 @@ export const TransactionForm = ({
         <button
           className={`${styles.flex} ${styles["no-margin-bottom"]}`}
           type="submit"
+          disabled={isSendLoading}
         >
           {transaction.id ? "save" : "create"}
         </button>

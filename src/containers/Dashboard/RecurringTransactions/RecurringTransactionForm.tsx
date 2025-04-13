@@ -20,6 +20,7 @@ import {
 import { useConfigContext } from "../Config/ConfigContext";
 import { SATS_IN_BTC, TableNames } from "../constants";
 import styles from "./styles.module.css";
+import {useState} from "react";
 
 export type FormRecurringTransaction = Omit<
   RecurringTransaction,
@@ -54,12 +55,16 @@ export const RecurringTransactionForm = ({
   onSuccess,
   onCancel,
 }: Props) => {
+  const [isSendLoading, setIsSendLoading] = useState(false);
   const { pubKeyHex } = useLofikAccount();
   const { inputSats } = useConfigContext();
 
   const { mutate } = useLofikMutation({
     shouldSync: true,
     onSuccess,
+    onSettled: () => {
+      setIsSendLoading(false)
+    },
   });
 
   const onSubmit = ({
@@ -71,6 +76,12 @@ export const RecurringTransactionForm = ({
     currency,
     inputSats,
   }: FormValues) => {
+    if (isSendLoading) {
+      return;
+    }
+
+    setIsSendLoading(true);
+
     let amountEval: number;
 
     try {
