@@ -5,6 +5,7 @@ import {
   useLofikMutation,
 } from "@lofik/react";
 import Mexp from "math-expression-evaluator";
+import { useState } from "react";
 import { z, type TypeOf } from "zod";
 import { AmountInput } from "../../../components/AmountInput";
 import { CategoryPicker } from "../../../components/CategoryPicker";
@@ -20,7 +21,6 @@ import {
 import { useConfigContext } from "../Config/ConfigContext";
 import { SATS_IN_BTC, TableNames } from "../constants";
 import styles from "./styles.module.css";
-import {useState} from "react";
 
 export type FormRecurringTransaction = Omit<
   RecurringTransaction,
