@@ -37,7 +37,7 @@ export const AmountInput = ({ name = "amount", autoFocus }: Props) => {
       name={name}
       placeholder="5+5"
       aria-label={name}
-      inputMode="tel"
+      inputMode="decimal"
       minLength={1}
       autoFocus={autoFocus}
     />

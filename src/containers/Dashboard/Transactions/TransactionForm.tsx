@@ -88,6 +88,7 @@ export const TransactionForm = ({
       amountEval = mexp.eval(amount);
     } catch (err) {
       alert(err);
+      setIsSendLoading(false)
 
       return;
     }
