@@ -24,7 +24,7 @@ export const useFormatCurrency = () => {
           : `₿${formatter.format(num)}`
         : formatter.format(num)
     }`;
-  }, []);
+  }, [baseCurrency, showSats]);
 
   return useMemo(() => ({ formatCurrency }), [formatCurrency]);
 };

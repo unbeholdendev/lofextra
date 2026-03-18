@@ -57,7 +57,7 @@ export const CategoryForm = ({ category, onSuccess, onCancel }: Props) => {
         title,
         pubKeyHex,
         sortOrder:
-          category.sortOrder || categoriesSortOrder[0].maxSortOrder + 1,
+          category.sortOrder || (categoriesSortOrder[0]?.maxSortOrder ?? 0) + 1,
         deletedAt: null,
         createdAt: category.createdAt || Date.now(),
       },

@@ -88,6 +88,7 @@ export const RecurringTransactionForm = ({
       amountEval = mexp.eval(amount);
     } catch (err) {
       alert(err);
+      setIsSendLoading(false);
 
       return;
     }
