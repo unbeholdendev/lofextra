@@ -16,7 +16,7 @@ export const RecurringTransactions = () => {
         WHERE 
           pubKeyHex = '${pubKeyHex}' 
           AND deletedAt IS NULL
-        ORDER BY createdAt`,
+        ORDER BY repeatDay ASC`,
     schema: recurringTransactionsSchema,
     queryKey: [QueryKeys.GET_RECURRING_TRANSACTIONS, pubKeyHex],
   });
