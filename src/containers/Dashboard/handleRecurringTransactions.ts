@@ -88,7 +88,9 @@ export const handleRecurringTransactions = async (
         });
       }
 
-      iterationTimestamp = new Date(iterationTimestamp).setMonth(
+      const base = new Date(startsAt);
+      base.setDate(recurringTransaction.repeatDay);
+      iterationTimestamp = new Date(base).setMonth(
         startsAt.getMonth() + index
       );
     }
