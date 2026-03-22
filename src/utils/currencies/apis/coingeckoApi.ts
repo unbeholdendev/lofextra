@@ -16,7 +16,7 @@ export const getBitcoinVsCurrencyExchangeRate = async (
       return;
     }
 
-    const exchangeRatesData = await response.json();
+    const exchangeRatesData = await response.json() as any;
 
     const exchangeRate = Math.round(
       exchangeRatesData.prices?.[exchangeRatesData.prices.length - 1]?.[1]
