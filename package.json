@@ -25,5 +25,8 @@
     "typescript": "^5.5.3",
     "vite": "^5.3.5",
     "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260317.1"
   }
 }
