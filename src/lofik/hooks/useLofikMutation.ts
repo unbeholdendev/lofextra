@@ -67,13 +67,15 @@ const useServerSync = () => {
 
   const sync = useCallback(
     async ({ mutations, ts, isFullSync, socket }: ServerSyncParams) => {
-      const nonce = randomBytes(24);
-
-      const chacha = xchacha20poly1305(sha256(privKey), nonce);
+      const key = sha256(privKey);
 
       const messages: Message[] = [];
 
       for (const mutation of mutations) {
+        const nonce = randomBytes(24);
+
+        const chacha = xchacha20poly1305(key, nonce);
+
         const encryptedMutation = chacha.encrypt(
           utf8ToBytes(JSON.stringify(mutation))
         );

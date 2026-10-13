@@ -8,6 +8,8 @@ const { handler } = await import("./dist/server/entry.mjs");
 const server = createServer((req, res) => {
   res.setHeader("cross-origin-embedder-policy", "require-corp");
   res.setHeader("cross-origin-opener-policy", "same-origin");
+  res.setHeader("x-frame-options", "DENY");
+  res.setHeader("x-content-type-options", "nosniff");
   handler(req, res);
 });
 attachSyncServer(server);

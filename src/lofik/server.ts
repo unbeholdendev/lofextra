@@ -26,6 +26,8 @@ export const attachSyncServer = (httpServer: HttpServer) => {
   mkdirSync(dirname(path), { recursive: true });
 
   const db = new Database(path);
+  // Anyone can mint a key and store messages, so cap the file at 1 GB.
+  db.run("PRAGMA max_page_count = 262144");
   db.run(
     "CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY AUTOINCREMENT, pubKeyHex TEXT NOT NULL, payload TEXT NOT NULL, nonce TEXT NOT NULL, deviceId TEXT NOT NULL, ackedDeviceIds TEXT NOT NULL DEFAULT '', ts INTEGER NOT NULL)"
   );
@@ -41,7 +43,8 @@ export const attachSyncServer = (httpServer: HttpServer) => {
   );
 
   // By default engine.io closes every other websocket upgrade, which kills Vite HMR in dev.
-  const io = new Server(httpServer, { destroyUpgrade: false });
+  // Full sync sends the whole history in one message; the 1 MB default holds about 2,000 transactions.
+  const io = new Server(httpServer, { destroyUpgrade: false, maxHttpBufferSize: 1e7 });
   const connections = new Map<string, Connection[]>();
 
   const push = async (messages: Message[], { socketId, deviceId }: Connection) => {
@@ -59,10 +62,16 @@ export const attachSyncServer = (httpServer: HttpServer) => {
       const parsed = messagesSchema.safeParse(raw);
       if (!parsed.success) return;
 
-      const created = db.transaction(() => {
-        if (fullSync) db.run("DELETE FROM messages WHERE pubKeyHex = ?", [pubKeyHex]);
-        return parsed.data.map((m) => insert.get(pubKeyHex, m.payload, m.nonce, m.deviceId, m.ts)!);
-      })();
+      let created: Message[];
+      try {
+        created = db.transaction(() => {
+          if (fullSync) db.run("DELETE FROM messages WHERE pubKeyHex = ?", [pubKeyHex]);
+          return parsed.data.map((m) => insert.get(pubKeyHex, m.payload, m.nonce, m.deviceId, m.ts)!);
+        })();
+      } catch (err) {
+        console.error(err);
+        return;
+      }
       done();
 
       for (const connection of connections.get(pubKeyHex) ?? []) {

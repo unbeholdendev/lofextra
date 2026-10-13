@@ -12,5 +12,7 @@ RUN bun install --frozen-lockfile --production
 COPY --from=build /app/dist ./dist
 COPY server.mjs ./
 COPY src/lofik ./src/lofik
+RUN mkdir data && chown bun:bun data
+USER bun
 EXPOSE 4321
 CMD ["bun", "server.mjs"]

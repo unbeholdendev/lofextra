@@ -9,6 +9,8 @@ import {
   type GenerateDatabaseUpsert,
 } from "../types";
 
+const q = (v: unknown) => `'${String(v).replaceAll("'", "''")}'`;
+
 export const utils: Record<
   DatabaseMutationOperation,
   // todo fix
@@ -28,14 +30,14 @@ export const utils: Record<
 
     const updateClause = columns
       .map((column, i) =>
-        values[i] === null ? `${column}=NULL` : `${column}='${values[i]}'`
+        values[i] === null ? `${column}=NULL` : `${column}=${q(values[i])}`
       )
       .join(",");
 
     const sql = `INSERT INTO ${tableName} (${columns.join(
       ","
     )}, updatedAt) VALUES (${values
-      .map((v) => (v === null ? "NULL" : `'${v}'`))
+      .map((v) => (v === null ? "NULL" : q(v)))
       .join(",")},'${
       ts
     }') ON CONFLICT (${identifierColumn}) DO UPDATE SET ${updateClause},updatedAt='${
@@ -52,7 +54,7 @@ export const utils: Record<
     }: GenerateDatabaseDelete,
     ts: number
   ) => {
-    const sql = `UPDATE ${tableName} SET deletedAt = '${ts}', updatedAt = '${ts}' WHERE ${identifierColumn} = '${identifierValue}'`;
+    const sql = `UPDATE ${tableName} SET deletedAt = '${ts}', updatedAt = '${ts}' WHERE ${identifierColumn} = ${q(identifierValue)}`;
 
     return sql;
   },
@@ -69,12 +71,12 @@ export const utils: Record<
     const sql = `
       UPDATE ${tableName} SET updatedAt = '${ts}', 
         ${sortColumn} = CASE 
-          WHEN ${identifierColumn} = '${identifierValue}' THEN ${order}
-          WHEN ${sortColumn} >= ${order} AND ${identifierColumn} <> '${identifierValue}' THEN ${sortColumn} + 1
+          WHEN ${identifierColumn} = ${q(identifierValue)} THEN ${order}
+          WHEN ${sortColumn} >= ${order} AND ${identifierColumn} <> ${q(identifierValue)} THEN ${sortColumn} + 1
           ELSE ${sortColumn}
         END
-      WHERE ${identifierColumn} = '${identifierValue}' 
-        OR (${sortColumn} >= ${order} AND ${identifierColumn} <> '${identifierValue}' 
+      WHERE ${identifierColumn} = ${q(identifierValue)} 
+        OR (${sortColumn} >= ${order} AND ${identifierColumn} <> ${q(identifierValue)} 
           AND deletedAt IS NULL)
     `;
 
@@ -96,7 +98,7 @@ export const handleRemoteDatabaseMutation = async ({
       : mutation.identifierValue;
 
   const record = await sqlocal.sql(
-    `SELECT * FROM ${mutation.tableName} WHERE ${identifierColumn} = '${identifierValue}'`
+    `SELECT * FROM ${mutation.tableName} WHERE ${identifierColumn} = ${q(identifierValue)}`
   );
 
   if (

@@ -5,14 +5,7 @@ export const getCnbBaseCurrencyExchangeRate = async (
   currency: string,
   createdAt: number
 ) => {
-  // we need to use cors proxy to circumvent the cnbs cors policy
-  const url =
-    "https://corsproxy.io/?" +
-    encodeURIComponent(
-      `https://www.cnb.cz/cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/denni_kurz.txt?date=${formatDateForCnbApi(
-        new Date(createdAt)
-      )}`
-    );
+  const url = `/cnb?date=${formatDateForCnbApi(new Date(createdAt))}`;
 
   try {
     const response = await fetch(url);
