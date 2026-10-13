@@ -4,7 +4,7 @@ import {
   useLofikAccount,
   useLofikMutation,
   type GenerateDatabaseMutation,
-} from "@lofik/react";
+} from "../lofik";
 import { useState } from "react";
 import { TableNames } from "../containers/Dashboard/constants";
 import { getUnixTimestamp } from "../utils/dates";

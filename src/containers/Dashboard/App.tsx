@@ -1,4 +1,4 @@
-import { LofikProvider } from "@lofik/react";
+import { LofikProvider } from "../../lofik";
 import {
   createHashHistory,
   createRootRoute,
@@ -7,7 +7,6 @@ import {
   Link,
   Outlet,
   RouterProvider,
-  ScrollRestoration,
   useLocation,
 } from "@tanstack/react-router";
 import { Categories } from "./Categories/Categories";
@@ -137,13 +136,11 @@ const rootRoute = createRootRoute({
             // migrations
             "CREATE TABLE IF NOT EXISTS migrations (name TEXT PRIMARY KEY, createdAt INTEGER NOT NULL)",
           ]}
-          websocketServerUrl={import.meta.env.PUBLIC_WS_URL}
           runMigrations={runMigrations}
           onInitialRemoteUpdatesReceived={handleRecurringTransactions}
         >
           <ConfigProvider loader={loader}>
             <section className={styles.section}>
-              <ScrollRestoration />
               <Outlet />
             </section>
           </ConfigProvider>
@@ -235,6 +232,10 @@ const routeTree = rootRoute.addChildren([
 
 const hashHistory = createHashHistory();
 
-const router = createRouter({ routeTree, history: hashHistory });
+const router = createRouter({
+  routeTree,
+  history: hashHistory,
+  scrollRestoration: true,
+});
 
 export const App = () => <RouterProvider router={router} />;

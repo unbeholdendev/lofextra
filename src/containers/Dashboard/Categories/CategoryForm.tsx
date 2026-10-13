@@ -4,9 +4,9 @@ import {
   sqlocal,
   useLofikAccount,
   useLofikMutation,
-} from "@lofik/react";
+} from "../../../lofik";
 import { useState } from "react";
-import { type TypeOf, z } from "zod";
+import { z } from "zod";
 import { Form } from "../../../components/Form";
 import { Input } from "../../../components/Input";
 import { type Category as CategoryType } from "../../../validators/types";
@@ -28,7 +28,7 @@ const schema = z.object({
   title: z.string().min(1),
 });
 
-type FormValues = TypeOf<typeof schema>;
+type FormValues = z.infer<typeof schema>;
 
 export const CategoryForm = ({ category, onSuccess, onCancel }: Props) => {
   const [isSendLoading, setIsSendLoading] = useState(false);

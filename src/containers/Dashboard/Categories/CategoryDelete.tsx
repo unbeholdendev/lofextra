@@ -1,4 +1,4 @@
-import { DatabaseMutationOperation, useLofikMutation } from "@lofik/react";
+import { DatabaseMutationOperation, useLofikMutation } from "../../../lofik";
 import { useState } from "react";
 import { ConfirmModal } from "../../../components/ConfirmModal";
 import { refetchQueries } from "../../../utils/refetchQueries";

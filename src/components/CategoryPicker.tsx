@@ -1,4 +1,4 @@
-import { useLofikAccount, useLofikQuery } from "@lofik/react";
+import { useLofikAccount, useLofikQuery } from "../lofik";
 import { useMemo } from "react";
 import { QueryKeys } from "../containers/Dashboard/constants";
 import { categoriesSchema } from "../validators/validators";

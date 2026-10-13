@@ -1,4 +1,4 @@
-import { useLofikAccount, useLofikQuery } from "@lofik/react";
+import { useLofikAccount, useLofikQuery } from "../../../lofik";
 import { getRouteApi, useRouter } from "@tanstack/react-router";
 import { recurringTransactionsSchema } from "../../../validators/validators";
 import { QueryKeys } from "../constants";

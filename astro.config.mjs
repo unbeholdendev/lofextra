@@ -1,19 +1,15 @@
+import node from "@astrojs/node";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import AstroPWA from "@vite-pwa/astro";
+import sqlocal from "sqlocal/vite";
 import { defineConfig } from "astro/config";
-import { loadEnv } from "vite";
 import manifest from "./manifest.json";
-
-const { PUBLIC_SITE_URL } = loadEnv(
-  process.env.PUBLIC_SITE_URL,
-  process.cwd(),
-  ""
-);
 
 // https://astro.build/config
 export default defineConfig({
-  site: PUBLIC_SITE_URL,
+  site: "https://lofextra.com",
+  adapter: node({ mode: "standalone" }),
   integrations: [
     react(),
     AstroPWA({
@@ -21,21 +17,21 @@ export default defineConfig({
       manifest,
       manifestFilename: "manifest.json",
       registerType: "autoUpdate",
+      // The integration only finds the client dir itself under output: "server".
+      outDir: "dist/client",
+      workbox: { globDirectory: "dist/client" },
     }),
     sitemap(),
+    {
+      name: "lofik-sync",
+      hooks: {
+        "astro:server:setup": async ({ server }) => {
+          const { attachSyncServer } = await import("./src/lofik/server.ts");
+          attachSyncServer(server.httpServer);
+        },
+      },
+    },
   ],
   prefetch: true,
-  vite: {
-    // this is needed because there's issue in vite regarding importing worker files
-    // https://github.com/vitejs/vite/issues/8427
-    optimizeDeps: {
-      exclude: ["@lofik/react"],
-    },
-  },
-  server: {
-    headers: {
-      "cross-origin-embedder-policy": "require-corp",
-      "cross-origin-opener-policy": "same-origin",
-    },
-  },
+  vite: { plugins: [sqlocal()] },
 });

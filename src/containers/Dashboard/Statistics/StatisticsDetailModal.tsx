@@ -1,4 +1,4 @@
-import { useLofikAccount, useLofikQuery } from "@lofik/react";
+import { useLofikAccount, useLofikQuery } from "../../../lofik";
 import { useState } from "react";
 import { Modal } from "../../../components/Modal";
 import { useFormatCurrency } from "../../../hooks/useFormatCurrency";

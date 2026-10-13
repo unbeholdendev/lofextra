@@ -41,7 +41,7 @@ export const recurringTransactionSchema = z.object({
     .number()
     .gte(1, "Must be 1 of greater")
     .lte(28, "Must be 28 or lower"),
-  repeatInterval: z.nativeEnum(RecurringTransactionRepeatInterval),
+  repeatInterval: z.enum(RecurringTransactionRepeatInterval),
   deletedAt: z.number().nullable(),
   updatedAt: z.number(),
   createdAt: z.number(),

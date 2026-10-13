@@ -1,4 +1,4 @@
-import { sqlocal, type SQLocal } from "@lofik/react";
+import { sqlocal, type SQLocal } from "../../lofik";
 import { getUnixTimestamp } from "../../utils/dates";
 import { Currencies } from "./constants";
 

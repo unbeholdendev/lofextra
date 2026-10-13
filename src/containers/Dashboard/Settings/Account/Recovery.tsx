@@ -1,4 +1,4 @@
-import { useDatabaseActions } from "@lofik/react";
+import { useDatabaseActions } from "../../../../lofik";
 import { type ChangeEvent, useRef } from "react";
 import { useFullServerSync } from "../../../../hooks/useFullServerSync";
 import styles from "../styles.module.css";

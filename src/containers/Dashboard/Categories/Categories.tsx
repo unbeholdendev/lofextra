@@ -8,10 +8,10 @@ import {
   useLofikAccount,
   useLofikMutation,
   useLofikQuery,
-} from "@lofik/react";
+} from "../../../lofik";
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import type { TypeOf } from "zod";
+import type { z } from "zod";
 import { arrayMove } from "../../../utils/array";
 import { categoriesSchema } from "../../../validators/validators";
 import { QueryKeys, TableNames } from "../constants";
@@ -26,7 +26,7 @@ export const Categories = () => {
   // using the state here as a 'hack' to prevent flickering issue when dropping caused by react-query
   // https://codesandbox.io/s/react-beautiful-dnd-flicker-after-synchronous-update-with-reactquery-n207n1
   const [categoriesState, setCategoriesState] =
-    useState<TypeOf<typeof categoriesSchema>>();
+    useState<z.infer<typeof categoriesSchema>>();
 
   const { data: categories, refetch } = useLofikQuery({
     sql: `

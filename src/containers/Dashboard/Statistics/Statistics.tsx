@@ -1,4 +1,4 @@
-import { useLofikAccount, useLofikQuery } from "@lofik/react";
+import { useLofikAccount, useLofikQuery } from "../../../lofik";
 import { useMemo, useState } from "react";
 import { z } from "zod";
 import { useDebounce } from "../../../hooks/useDebounce";

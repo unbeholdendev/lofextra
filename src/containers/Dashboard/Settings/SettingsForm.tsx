@@ -3,7 +3,7 @@ import {
   queryClient,
   useLofikAccount,
   useLofikMutation,
-} from "@lofik/react";
+} from "../../../lofik";
 import { useConfigContext } from "../Config/ConfigContext";
 import { Currencies, QueryKeys, TableNames } from "../constants";
 import styles from "./styles.module.css";

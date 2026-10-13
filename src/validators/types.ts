@@ -1,4 +1,4 @@
-import { type TypeOf } from "zod";
+import type { z } from "zod";
 import {
   categorySchema,
   configSchema,
@@ -6,13 +6,13 @@ import {
   transactionSchema,
 } from "./validators";
 
-export type Transaction = TypeOf<typeof transactionSchema>;
-export type Category = TypeOf<typeof categorySchema>;
+export type Transaction = z.infer<typeof transactionSchema>;
+export type Category = z.infer<typeof categorySchema>;
 
 export enum RecurringTransactionRepeatInterval {
   MONTH = "month",
 }
 
-export type RecurringTransaction = TypeOf<typeof recurringTransactionSchema>;
+export type RecurringTransaction = z.infer<typeof recurringTransactionSchema>;
 
-export type Config = TypeOf<typeof configSchema>;
+export type Config = z.infer<typeof configSchema>;

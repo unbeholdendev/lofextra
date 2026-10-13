@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 import "../pico.pumpkin.min.css";
 
 interface Props {
@@ -39,10 +39,10 @@ const description = "local-first expense tracker";
     <script
         is:inline
         defer
-        src="/script.js"
+        src="/u/script.js"
         data-website-id="896c59bd-dce8-4587-80f1-54f01c9a25d0"></script>
 
-    <ViewTransitions />
+    <ClientRouter />
   </head>
 
   <body>

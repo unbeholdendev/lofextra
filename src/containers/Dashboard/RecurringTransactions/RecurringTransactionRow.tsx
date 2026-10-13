@@ -1,4 +1,4 @@
-import { useLofikAccount, useLofikQuery } from "@lofik/react";
+import { useLofikAccount, useLofikQuery } from "../../../lofik";
 import { useMemo } from "react";
 import { useFormatCurrency } from "../../../hooks/useFormatCurrency";
 import { type RecurringTransaction } from "../../../validators/types";

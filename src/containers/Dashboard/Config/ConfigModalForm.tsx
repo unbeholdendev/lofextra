@@ -6,8 +6,8 @@ import {
   useLofikAccount,
   useLofikMutation,
   type GenerateDatabaseMutation,
-} from "@lofik/react";
-import { z, type TypeOf } from "zod";
+} from "../../../lofik";
+import { z } from "zod";
 import { CurrencyPicker } from "../../../components/CurrencyPicker";
 import { Form } from "../../../components/Form";
 import { Modal } from "../../../components/Modal";
@@ -19,7 +19,7 @@ const schema = z.object({
   baseCurrency: z.string(),
 });
 
-type FormValues = TypeOf<typeof schema>;
+type FormValues = z.infer<typeof schema>;
 
 export const ConfigModalForm = () => {
   const { pubKeyHex } = useLofikAccount();

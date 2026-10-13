@@ -2,7 +2,7 @@ import {
   DatabaseMutationOperation,
   type GenerateDatabaseMutation,
   type SQLocal,
-} from "@lofik/react";
+} from "../../lofik";
 import { getAmountInCurrency } from "../../utils/currencies/currencies";
 import { getUnixTimestamp } from "../../utils/dates";
 import { refetchQueries } from "../../utils/refetchQueries";

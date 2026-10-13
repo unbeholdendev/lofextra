@@ -1,4 +1,4 @@
-import { useLofikAccount, useLofikAccountActions } from "@lofik/react";
+import { useLofikAccount, useLofikAccountActions } from "../../../../lofik";
 import { type UseFormReturn } from "react-hook-form";
 import { Form } from "../../../../components/Form";
 import { CopyIcon } from "../../../../components/icons/Copy";

@@ -1,4 +1,4 @@
-import { useLofikAccount, useLofikQuery } from "@lofik/react";
+import { useLofikAccount, useLofikQuery } from "../../../lofik";
 import { type ReactNode, createContext, useContext, useMemo } from "react";
 import { type Config } from "../../../validators/types";
 import { configsSchema } from "../../../validators/validators";

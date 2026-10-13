@@ -1,4 +1,4 @@
-import { useLofikAccount, useLofikQuery } from "@lofik/react";
+import { useLofikAccount, useLofikQuery } from "../../lofik";
 import { useNavigate } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { z } from "zod";

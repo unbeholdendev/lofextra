@@ -3,10 +3,10 @@ import {
   DatabaseMutationOperation,
   useLofikAccount,
   useLofikMutation,
-} from "@lofik/react";
+} from "../../../lofik";
 import Mexp from "math-expression-evaluator";
 import { useState } from "react";
-import { z, type TypeOf } from "zod";
+import { z } from "zod";
 import { AmountInput } from "../../../components/AmountInput";
 import { CategoryPicker } from "../../../components/CategoryPicker";
 import { CurrencyPicker } from "../../../components/CurrencyPicker";
@@ -46,7 +46,7 @@ const schema = z.object({
   inputSats: z.boolean().optional(),
 });
 
-type FormValues = TypeOf<typeof schema>;
+type FormValues = z.infer<typeof schema>;
 
 const mexp = new Mexp();
 

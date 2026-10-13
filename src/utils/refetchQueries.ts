@@ -1,4 +1,4 @@
-import { queryClient } from "@lofik/react";
+import { queryClient } from "../lofik";
 import { QueryKeys } from "../containers/Dashboard/constants";
 
 export const refetchQueries = () => {

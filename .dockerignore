@@ -1,0 +1,9 @@
+.astro
+.claude
+.devcontainer
+.forgejo
+.git
+.idea
+data
+dist
+node_modules

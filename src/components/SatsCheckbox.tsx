@@ -2,7 +2,7 @@ import {
   DatabaseMutationOperation,
   queryClient,
   useLofikMutation,
-} from "@lofik/react";
+} from "../lofik";
 import { useFormContext } from "react-hook-form";
 import { useConfigContext } from "../containers/Dashboard/Config/ConfigContext";
 import { QueryKeys, TableNames } from "../containers/Dashboard/constants";
