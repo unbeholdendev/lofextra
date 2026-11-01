@@ -1,5 +1,4 @@
 {
   "name": "lofextra",
-  "image": "oven/bun:1.4",
-  "appPort": ["4322:4321"]
+  "image": "oven/bun:1.4"
 }
