@@ -8,7 +8,7 @@ import manifest from "./manifest.json";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://lofextra.com",
+  site: "https://lofextra.unbeholden.dev",
   adapter: node({ mode: "standalone" }),
   integrations: [
     react(),
