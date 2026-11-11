@@ -1,4 +1,4 @@
-# [lofextra](https://lofextra.com)
+# [lofextra](https://lofextra.unbeholden.dev)
 
 ## LOcal-First EXpense TRAcker
 
@@ -64,7 +64,7 @@ I've strongly considered using [Evolu](https://www.evolu.dev/) as a tool for bui
 
 ### Donate
 
-If you find this app at least a tiny bit helpful and want to support the work that I do in my free time, you can do so [here](https://lofextra.com/donate). I really appreciate it, thank you.
+If you find this app at least a tiny bit helpful and want to support the work that I do in my free time, you can do so [here](https://lofextra.unbeholden.dev/donate). I really appreciate it, thank you.
 
 ### Disclaimer
 
